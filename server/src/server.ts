@@ -27,6 +27,7 @@ interface ComplexSearchResponse {
 }
 //Route to call complex Search endpoint from Spoonacular 
 app.get('/complexSearch', async (req: Request, res: Response) => {
+    console.log('route was hit ')
     const query = req.query.query as string | undefined
     const number: number = parseInt(String(req.query.number), 10) || 60
     const offset: number = parseInt(String(req.query.offset), 10) || 0
@@ -45,14 +46,17 @@ app.get('/complexSearch', async (req: Request, res: Response) => {
     }
 
     try {
+        console.log('fetching spoonacular ', url)
         const response = await fetch(url)
+        console.log('done fetching')
+        console.log('status:' , response.status)
         if (!response.ok) {
             throw new Error('API error')
         }
         const data: ComplexSearchResponse = await response.json()
         res.json(data)
     } catch (error: any) {
-        console.error(error)
+        console.error(error.message)
         res.status(500).json({ error: 'Failed to fetch complex search results' })
     }
 })
