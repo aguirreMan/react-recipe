@@ -6,14 +6,15 @@ export async function fetchRecipes(query: string, page: number = 1, isRandom: bo
     const offset: number = (page -1) * recipesPerPage
     let apiUrl: string = `${complexSearch}?query=${query}&number=${recipesPerPage}`
 
-    if(!isRandom){
+    if(isRandom){
         apiUrl += `&random=true`
     } else {
         apiUrl += `&offset=${offset}`
     }
     const response = await fetch(apiUrl)
     if(!response.ok){
-        alert('Failed to fetch recipes')
+        alert('failed to fetch recipes')
+        throw new Error('Failed to fetch recipes')
     }
     return response.json() as Promise<ComplexSearchResponse>
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { fetchRecipes } from '../api/fetchRecipes'
-import { ComplexSearchResponse, dummyRecipes } from '../api/dummyData'
+import { ComplexSearchResponse } from '../api/dummyData'
 
 interface SpoonacularDataParams {
     query: string,
@@ -10,21 +10,24 @@ interface SpoonacularDataParams {
 }
 
 export default function useFetchRecipes({ query, page, random }: SpoonacularDataParams) {
-    const [recipes, setRecipes] = useState<ComplexSearchResponse>(dummyRecipes)
-    const useDummyData: boolean = true
+    const [recipes, setRecipes] = useState<ComplexSearchResponse>({
+        results: [],
+        offset: 0,
+        number: 0,
+        totalResults: 0
+    })
     useEffect(() => {
-        if (!query) {
-            setRecipes(dummyRecipes)
+        if(!query){
+            setRecipes({results: [], offset: 0, number: 0, totalResults: 0})
             return
-            console.log('using dummy data')
         }
-        fetchDummyData(query, page, random)
-            .then(setRecipes)
+        fetchRecipes(query, page, random)
+        .then((data) => setRecipes(data))
     }, [query, page, random])
     return recipes
 }
 
-function fetchDummyData(query: string, page: number = 1, random: boolean = false): Promise<ComplexSearchResponse> {
+/*function fetchDummyData(query: string, page: number = 1, random: boolean = false): Promise<ComplexSearchResponse> {
     //So now we need to access the dummy data here so we avoid an api call we can mimick return a promise to simulate 
     // An api call with data formatted from spoonacular 
     return new Promise((resolve) => {
@@ -50,3 +53,4 @@ function fetchDummyData(query: string, page: number = 1, random: boolean = false
     })
 }
 
+*/

@@ -14,7 +14,7 @@ export interface ComplexSearchResponse {
   number: number
   totalResults: number
 }
-
+/* Wont use these since i am working on production mode today
 export const dummyRecipes: ComplexSearchResponse = {
   results: [
     {
@@ -40,3 +40,4 @@ export const dummyRecipes: ComplexSearchResponse = {
   number: 3,
   totalResults: 50,
 }
+  */

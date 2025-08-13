@@ -2,14 +2,18 @@ import React from 'react'
 
 interface CategoryCardData {
   title: string,
-  imageSrc: string
+  imageSrc: string,
+  onClick?: () => void
 }
 
-export default function CategoryCard({title, imageSrc}) {
+export default function CategoryCard({ title, imageSrc, onClick }: CategoryCardData) {
   return (
-    <div className='bg-blue-50 text-white p-7 rounded-lg w-64 h-64'>
-        <h2 className='text-xl text-center'>{title}</h2>
-        <img src={imageSrc} className='pt-6 object-cover' />
+    <div className='bg-white text-black p-7 shadow-md transition duration-200 
+  hover:bg-gray-500 hover:text-black hover:shadow-lg hover:scale-105 
+  cursor-pointer ml-8 rounded-lg w-36 h-auto'
+      onClick={onClick}>
+      <h2 className='text-xl text-center'>{title}</h2>
+      <img src={imageSrc} className='pt-4 object-cover w-full rounded-lg' />
     </div>
   )
 }
