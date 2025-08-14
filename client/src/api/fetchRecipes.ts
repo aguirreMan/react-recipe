@@ -1,4 +1,4 @@
-import { ComplexSearchResponse } from "./dummyData"
+import { ComplexSearchResponse } from './dummyData'
 
 export async function fetchRecipes(query: string, page: number = 1, isRandom: boolean= false): Promise<ComplexSearchResponse>{
     const complexSearch: string = 'http://localhost:3000/complexSearch'
