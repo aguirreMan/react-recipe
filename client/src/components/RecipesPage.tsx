@@ -3,8 +3,10 @@ import { useState } from 'react'
 import SearchBar from './SearchBar'
 import Categories from './Categories'
 import useFetchRecipes from '../hooks/useFetchRecipes'
+import SpoonacularRecipes from './SpoonacularRecipes'
 
 export default function RecipesPage() {
+    //console.log('RecipesPage rendered')
     const [query, setQuery] = useState('')
     const [page, setPage] = useState(1)
     const [random, setRandom] = useState(false)
@@ -21,26 +23,34 @@ export default function RecipesPage() {
     }
 
     function handlesCategoryClicks(categoryTitle: string) {
+        console.log('this is clicked')
         setQuery(categoryTitle)
         setPage(1)
         setRandom(true)
+        setSearched(true)
     }
-    console.log('recipe data', recipeData)
     return (
         <div>
             <SearchBar onSearch={handleSearch} />
             {!hasSearched ? (
-                <p>Search for a recipe or click a category</p>
+                <div className='relative flex justify-center group pt-6'>
+                    <span className='bg-green-500 text-white px-4 py-2 rounded-full font-semibold shadow-lg cursor-pointer'>
+                        Search for your favorite foods!
+                    </span>
+                </div>
             ) : recipeData.results.length === 0 ? (
                 <p>No recipes found</p>
             ) : (
-                recipeData.results.map((recipe) => (
-                    <div key={recipe.id} className='recipe-card p-4 border rounded mb-3'>
-                        <h3 className='text-xl font-black'>{recipe.title}</h3>
+                <div className='px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto'>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+                        {recipeData.results.map(recipe => (
+                            <SpoonacularRecipes key={recipe.id} title={recipe.title} image={recipe.image} />
+                        ))}
                     </div>
-                ))
+                </div>
             )}
             <Categories onCategoryClicked={handlesCategoryClicks} />
         </div>
     )
+
 }

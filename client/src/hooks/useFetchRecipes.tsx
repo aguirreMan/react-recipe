@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { fetchRecipes } from '../api/fetchRecipes'
 import { ComplexSearchResponse } from '../api/dummyData'
 
@@ -9,6 +9,7 @@ interface SpoonacularDataParams {
 }
 
 export default function useFetchRecipes({ query, page, random }: SpoonacularDataParams) {
+    const hasFetched = useRef(false)
     const [recipes, setRecipes] = useState<ComplexSearchResponse>({
         results: [],
         offset: 0,
@@ -16,12 +17,16 @@ export default function useFetchRecipes({ query, page, random }: SpoonacularData
         totalResults: 0
     })
     useEffect(() => {
-        if(!query){
-            setRecipes({results: [], offset: 0, number: 0, totalResults: 0})
-            return
-        }
+        if(!query) return
+        if(hasFetched.current) return
+
+        console.log('Fetching recipes for:', query)
+
         fetchRecipes(query, page, random)
-        .then((data) => setRecipes(data))
+            .then((data) => {
+                setRecipes(data)
+                hasFetched.current = true
+            })
     }, [query, page, random])
     return recipes
 }

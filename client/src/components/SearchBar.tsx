@@ -25,7 +25,7 @@ export default function SearchBar({ onSearch }: SearchBarData) {
     return (
         <form onSubmit={handleSubmit}>
         <section className='flex justify-center flex-col items-center'>
-            <label htmlFor='search-food' className='mb-2 text-3xl pt-8'>Search Food!</label>
+            <label htmlFor='search-food' className='mb-4 text-3xl pt-6'>Search Food!</label>
             <div className='flex rounded-md overflow-hidden'>
                 <input id='search-food' type='search' placeholder='tacos, pizza, chicken'
                     className='h-4 outline-0 border-0 text-2xl p-5 bg-white'
