@@ -11,9 +11,6 @@ export default function SearchBar({ onSearch }: SearchBarData) {
     function handleInput(event: ChangeEvent<HTMLInputElement>) {
         const newQuery = event.target.value.toLowerCase()
         setQuery(newQuery)
-        if (newQuery.length >= 3) {
-            onSearch(newQuery)
-        }  
     }
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>){
