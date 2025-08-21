@@ -1,6 +1,4 @@
-//Using Dummy Data to simulate a real api call eventually when ready for production use 
-//Spoonaculars fake data 
-
+//The SpoonacularResultsComplexSearch is needed as well as the ComplexSearchResponse
 export interface SpoonacularResultsComplexSearch {
   id: number
   title: string
@@ -14,7 +12,42 @@ export interface ComplexSearchResponse {
   number: number
   totalResults: number
 }
-/* Wont use these since i am working on production mode today
+
+
+//These are the interface types for instructions and ingredient data
+
+export interface SpoonacularInstructions {
+  number: number,
+  step: string
+}
+
+export interface SpoonacularInstrucionObject {
+  steps: SpoonacularInstructions[]
+}
+
+//This is the data for Ingredientds Data 
+
+export interface SpoonacularIngredients {
+  id: number,
+  servings: number,
+  extendedIngredients: ExtendedIngredients[]
+}
+
+export interface ExtendedIngredients {
+  name: string,
+  nameClean: string,
+  original: string,
+  amount: number,
+  unit: string
+}
+
+//This is the whole object we will get from spoonacular when fetching both ingredeints and instrucion data
+export interface RecipeDetails {
+  instructions: SpoonacularInstrucionObject[],
+  ingredients: SpoonacularIngredients
+}
+
+/* These recipes below were only used for development and testing mode they are not a part of the application
 export const dummyRecipes: ComplexSearchResponse = {
   results: [
     {

@@ -6,8 +6,8 @@ import RecipesPage from './components/RecipesPage'
 function App() {
   return (
     <>
-      <Header />
-      <RecipesPage />
+        <Header />
+        <RecipesPage />
     </>
   )
 }
