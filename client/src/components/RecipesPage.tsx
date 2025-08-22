@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router'
 import SearchBar from './SearchBar'
 import Categories from './Categories'
 import useFetchRecipes from '../hooks/useFetchRecipes'
@@ -8,6 +8,8 @@ import { SpoonacularResultsComplexSearch, ComplexSearchResponse } from '../api/d
 import LoadMoreRecipesButton from './LoadMoreRecipesButton'
 
 export default function RecipesPage(){
+
+    const navigator = useNavigate()
     const [query, setQuery] = useState('')
     const [page, setPage] = useState(1)
     const [random, setRandom] = useState(false)
@@ -19,6 +21,10 @@ export default function RecipesPage(){
     const [recipes, setRecipes] = useState<SpoonacularResultsComplexSearch[]>([])
     const [totalResults, setTotalResults] = useState<number>(0)
     const [paginate, canPaginate] = useState(false)
+
+    function navigateRecipes(id: number){
+        navigator(`/recipes/${id}`)
+    }
 // useeffect to decide if we do a search or category click
     useEffect(() => {
         if(!recipeData) {
@@ -75,7 +81,11 @@ export default function RecipesPage(){
                 <div className='px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto'>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                         {recipes.map(recipe => (
-                            <SpoonacularRecipes key={recipe.id} title={recipe.title} image={recipe.image} />
+                            <SpoonacularRecipes 
+                            key={recipe.id} 
+                            title={recipe.title} 
+                            image={recipe.image}
+                            onRecipeClick={() => navigateRecipes(recipe.id)} />
                         ))}
                     </div>
                     <div className='flex justify-center'>

@@ -6,6 +6,7 @@ export interface SpoonacularResultsComplexSearch {
   imageType?: string
 }
 
+
 export interface ComplexSearchResponse {
   results: SpoonacularResultsComplexSearch[]
   offset: number
@@ -42,7 +43,7 @@ export interface ExtendedIngredients {
 }
 
 //This is the whole object we will get from spoonacular when fetching both ingredeints and instrucion data
-export interface RecipeDetails {
+export interface RecipeDetails extends SpoonacularResultsComplexSearch {
   instructions: SpoonacularInstrucionObject[],
   ingredients: SpoonacularIngredients
 }
