@@ -22,8 +22,8 @@ export default function RecipesPage(){
     const [totalResults, setTotalResults] = useState<number>(0)
     const [paginate, canPaginate] = useState(false)
 
-    function navigateRecipes(id: number){
-        navigator(`/recipes/${id}`)
+    function navigateRecipes(recipe: SpoonacularResultsComplexSearch){
+        navigator(`/recipes/${recipe.id}` , { state: { recipe }})
     }
 // useeffect to decide if we do a search or category click
     useEffect(() => {
@@ -85,7 +85,7 @@ export default function RecipesPage(){
                             key={recipe.id} 
                             title={recipe.title} 
                             image={recipe.image}
-                            onRecipeClick={() => navigateRecipes(recipe.id)} />
+                            onRecipeClick={() => navigateRecipes(recipe)} />
                         ))}
                     </div>
                     <div className='flex justify-center'>

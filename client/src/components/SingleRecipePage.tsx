@@ -1,10 +1,13 @@
 import React from 'react'
 //Import loader eventually
-import { useParams } from 'react-router'
+import { useParams, useLocation } from 'react-router'
 import useFetchRecipeData from '../hooks/useFetchRecipeData'
 
 
 export default function SingleRecipePage() {
+    const location = useLocation()
+    const recipeObject = location.state?.recipe
+
     const { recipeId } = useParams() as { recipeId?: string}
     const { recipeData, loading, error } = useFetchRecipeData(recipeId)
     console.log(recipeData)
@@ -17,7 +20,7 @@ export default function SingleRecipePage() {
 
     return (
       <div>
-        <h1>{recipeData?.title}</h1>
+        <h1>{recipeObject?.title}</h1>
       </div>
   )
 }
