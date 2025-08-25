@@ -3,7 +3,8 @@ import React from 'react'
 interface CategoryCardData {
   title: string,
   imageSrc: string,
-  onClick?: () => void
+  onClick?: () => void,
+  className?: string
 }
 
 export default function CategoryCard({ title, imageSrc, onClick }: CategoryCardData) {

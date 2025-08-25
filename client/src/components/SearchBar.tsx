@@ -20,17 +20,17 @@ export default function SearchBar({ onSearch }: SearchBarData) {
 
 
     return (
-        <form onSubmit={handleSubmit}>
-        <section className='flex justify-center flex-col items-center'>
-            <label htmlFor='search-food' className='mb-4 text-3xl pt-6'>Search Food!</label>
-            <div className='flex rounded-md overflow-hidden'>
+        <form onSubmit={handleSubmit} className='w-full'>
+        <section className='flex justify-center flex-col items-center w-full px-4'>
+            <label htmlFor='search-food' className='mb-4 text-3xl pt-6 text-center'>Search Food!</label>
+            <div className='flex rounded-md overflow-hidden '>
                 <input id='search-food' type='search' placeholder='tacos, pizza, chicken'
-                    className='h-4 outline-0 border-0 text-2xl p-5 bg-white'
+                    className='h-4 outline-0 border-0 text-2xl p-5 bg-white flex-1 min-w-0'
                     value={query}
                     onChange={handleInput}
                 />
                 <button type='submit' className='border-0 bg-emerald-600 text-amber-100 
-                cursor-pointer outline-0 w-20'>Search</button>
+                cursor-pointer outline-0 w-20 hover:bg-emerald-700 transition-colors'>Search</button>
             </div>
         </section>
         </form>

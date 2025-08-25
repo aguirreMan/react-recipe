@@ -31,12 +31,13 @@ export default function Categories({ onCategoryClicked }: CategoryProps) {
   }
 
   return (
-    <div className='flex flex-row mt-18 justify-center gap-4'>
+    <div className='grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 mt-18 justify-items-center gap-4'>
       {categories.map((category) => (
         <CategoryCard onClick={() => categoryCardClicked(category.title)}
         key={category.title} 
         title={category.title} 
-        imageSrc={category.image} />
+        imageSrc={category.image}
+        className='w-full' />
       ))}
     </div>
   )

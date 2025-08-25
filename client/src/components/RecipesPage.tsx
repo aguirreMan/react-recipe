@@ -71,8 +71,8 @@ export default function RecipesPage(){
             <SearchBar onSearch={handleSearch} />
             {!hasSearched ? (
                 <div className='relative flex justify-center group pt-6'>
-                    <span className='bg-green-500 text-white px-4 py-2 rounded-full font-semibold shadow-lg cursor-pointer'>
-                        Search for your favorite foods!
+                    <span className='bg-green-500 text-white px-4 py-2 rounded-full font-semibold shadow-lg'>
+                        Browse or explore new Recipes!
                     </span>
                 </div>
             ) : recipeData?.results.length === 0 ? (
