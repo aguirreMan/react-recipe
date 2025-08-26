@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
-body {
-    background-color: #dbc947;
+@theme {
+    --color-custom-header: #3A3A3A;
+    --color-custom-font-title: #f2f0ed;
+    --color-custom-searchbar: #E8E8E8;
+    --color-custom-searchbar-hover: #D4D4D4;
+    --color-custom-button: #E67E22;
+    --color-custom-button-hover: #CC5500;
+    --color-custom-body: #F8FAF6;
 }

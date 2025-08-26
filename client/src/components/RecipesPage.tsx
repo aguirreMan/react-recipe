@@ -1,21 +1,24 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
-import SearchBar from './SearchBar'
 import Categories from './Categories'
 import useFetchRecipes from '../hooks/useFetchRecipes'
 import SpoonacularRecipes from './SpoonacularRecipes'
 import { SpoonacularResultsComplexSearch, ComplexSearchResponse } from '../api/dummyData'
 import LoadMoreRecipesButton from './LoadMoreRecipesButton'
 
-export default function RecipesPage(){
+interface RecipePageData {
+    searchQuery: string,
+    onCategoryClick: (query: string ) => void
+}
 
+export default function RecipesPage({ searchQuery, onCategoryClick}: RecipePageData){
     const navigator = useNavigate()
-    const [query, setQuery] = useState('')
+
     const [page, setPage] = useState(1)
     const [random, setRandom] = useState(false)
 
 
-    const recipeData:ComplexSearchResponse | null = useFetchRecipes({ query, page, random })
+    const recipeData:ComplexSearchResponse | null = useFetchRecipes({ query: searchQuery, page, random })
 
     const [hasSearched, setSearched] = useState(false)
     const [recipes, setRecipes] = useState<SpoonacularResultsComplexSearch[]>([])
@@ -48,15 +51,9 @@ export default function RecipesPage(){
         }
     }, [recipes, totalResults, random])
 
-    function handleSearch(newQuery: string) {
-        setQuery(newQuery)
-        setPage(1)
-        setRandom(false)
-        setSearched(true)
-    }
 
     function handlesCategoryClicks(categoryTitle: string){
-        setQuery(categoryTitle)
+        onCategoryClick(categoryTitle)
         setPage(1)
         setRandom(true)
         setSearched(true)
@@ -68,13 +65,8 @@ export default function RecipesPage(){
     }
     return (
         <div>
-            <SearchBar onSearch={handleSearch} />
             {!hasSearched ? (
-                <div className='relative flex justify-center group pt-6'>
-                    <span className='bg-green-500 text-white px-4 py-2 rounded-full font-semibold shadow-lg'>
-                        Browse or explore new Recipes!
-                    </span>
-                </div>
+                <div className='relative flex justify-center group pt-6'></div>
             ) : recipeData?.results.length === 0 ? (
                 <p>No recipes found</p>
             ) : (
