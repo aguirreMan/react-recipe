@@ -8,7 +8,7 @@ import LoadMoreRecipesButton from './LoadMoreRecipesButton'
 
 interface RecipePageData {
     searchQuery: string,
-    onCategoryClick: (query: string ) => void
+    onCategoryClick: (query: string ) => void,
 }
 
 export default function RecipesPage({ searchQuery, onCategoryClick}: RecipePageData){
@@ -51,6 +51,12 @@ export default function RecipesPage({ searchQuery, onCategoryClick}: RecipePageD
         }
     }, [recipes, totalResults, random])
 
+    useEffect(() => {
+        if(searchQuery){
+            setSearched(true)
+        }
+    }, [searchQuery])
+
 
     function handlesCategoryClicks(categoryTitle: string){
         onCategoryClick(categoryTitle)
@@ -58,7 +64,6 @@ export default function RecipesPage({ searchQuery, onCategoryClick}: RecipePageD
         setRandom(true)
         setSearched(true)
     }
-
    
     function loadMoreRecipes(){
        setPage(prev => prev + 1)

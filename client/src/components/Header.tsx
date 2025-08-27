@@ -1,12 +1,9 @@
 import React from 'react'
 import logo from '../assets/images/logo.png'
-import SearchBar from './SearchBar'
+import SearchBar, { SearchBarData } from './SearchBar'
 
-interface HeaderData {
-    onSearch: (query:string) => void
-}
 
-export default function Header({onSearch}: HeaderData) {
+export default function Header({onSearch}: SearchBarData) {
     return (
         <header className='bg-custom-header shadow-sm sticky top-0 z-50 h-18 '>
             <div className='px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col md:flex-row 

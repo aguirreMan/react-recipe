@@ -21,8 +21,7 @@ function App(){
         <Header onSearch={handleSearch} />
         <RecipesPage 
         searchQuery={query}
-        onCategoryClick={handleCategoryClick}
-        />
+        onCategoryClick={handleCategoryClick} />
       </div>
     </>
   )
