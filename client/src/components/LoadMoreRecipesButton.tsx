@@ -6,7 +6,7 @@ interface ButtonProps {
   disabled?: boolean
 }
 
-export default function LoadMoreRecipesButton({ onClick, children, disabled = false }: ButtonProps) {
+export default function LoadMoreRecipesButton({ onClick, children, disabled = false }: ButtonProps){
   return (
     <button onClick={onClick}
       className={`bg-custom-button px-4 py-2 rounded-3xl border-none shadow cursor-pointer border-2 
