@@ -17,11 +17,13 @@ function App(){
 
   return (
     <>
+      <div className='min-h-screen bg-custom-background-color'>
         <Header onSearch={handleSearch} />
         <RecipesPage 
         searchQuery={query}
         onCategoryClick={handleCategoryClick}
         />
+      </div>
     </>
   )
 }

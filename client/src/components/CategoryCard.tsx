@@ -9,8 +9,8 @@ interface CategoryCardData {
 
 export default function CategoryCard({ title, imageSrc, onClick }: CategoryCardData) {
   return (
-    <div className='bg-white text-black p-7 shadow-md transition duration-200 
-  hover:bg-gray-500 hover:text-black hover:shadow-lg hover:scale-105 
+    <div className='bg-custom-category-card text-custom-card-titles p-7 shadow-md transition duration-200 
+  hover:bg-custom-category-card-hover hover:text-custom-card-title-hover hover:shadow-lg hover:scale-105 
   cursor-pointer ml-8 rounded-lg w-36 h-auto'
       onClick={onClick}>
       <h2 className='text-xl text-center'>{title}</h2>
