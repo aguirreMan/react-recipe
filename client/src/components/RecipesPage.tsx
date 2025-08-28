@@ -106,7 +106,7 @@ export default function RecipesPage({ searchQuery, onCategoryClick }: RecipePage
                     {recipesLoading && recipes.length > 0 && (
                         <div className='flex justify-center mt-4'>
                             <button className='flex items-center gap-2 px-6 rounded-full 
-                            font-semibold shadow-md'
+                            font-semibold shadow-md bg-custom-category-card-hover mt-4 mb-4'
                                 onClick={toggleCategories} >
                                 {showCategories ? 'hide categories' : 'show categories'}
                                 <span className={`transform transition-transform ${showCategories ? 'rotate-180' : ''}`}>

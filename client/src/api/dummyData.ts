@@ -21,11 +21,6 @@ export interface SpoonacularInstructions {
   number: number,
   step: string
 }
-
-export interface SpoonacularInstrucionObject {
-  steps: SpoonacularInstructions[]
-}
-
 //This is the data for Ingredientds Data 
 
 export interface SpoonacularIngredients {
@@ -34,17 +29,36 @@ export interface SpoonacularIngredients {
   extendedIngredients: ExtendedIngredients[]
 }
 
+export interface Measures {
+  us: MeasureUnit,
+  metric: MeasureUnit
+}
+
+export interface MeasureUnit {
+  amount: number,
+  unitShort: string,
+  unitLong?: string
+}
+
+export interface FormattedMeasures {
+  us: string,
+  metric: string
+}
+
 export interface ExtendedIngredients {
   name: string,
   nameClean: string,
   original: string,
   amount: number,
-  unit: string
+  unit: string,
+  measures: Measures,
+  formattedMeasures: FormattedMeasures
 }
 
 //This is the whole object we will get from spoonacular when fetching both ingredeints and instrucion data
 export interface RecipeDetails extends SpoonacularResultsComplexSearch {
-  instructions: SpoonacularInstrucionObject[],
+  instructions: SpoonacularInstructions[],
+  servings: number,
   ingredients: SpoonacularIngredients
 }
 
