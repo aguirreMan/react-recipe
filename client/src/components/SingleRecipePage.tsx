@@ -1,5 +1,4 @@
 import React from 'react'
-//Import loader eventually
 import { useParams, useLocation } from 'react-router'
 import useFetchRecipeData from '../hooks/useFetchRecipeData'
 
@@ -12,10 +11,6 @@ export default function SingleRecipePage() {
   if (loading) return <div>..Loading</div>
   if (error) return <div>Error: {error}</div>
   if (!recipeData) return <div>No recipe found with this ID.</div>
-
-
-
-
   return (
     <div className='max-w-5xl mx-auto px-4'>
       <h1 className='text-center mt-6 text-3xl text-custom-header'>
