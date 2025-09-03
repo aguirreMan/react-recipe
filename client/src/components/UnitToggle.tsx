@@ -1,6 +1,6 @@
 import React from 'react'
 
-interface UnitSystemToggle {
+export interface UnitSystemToggle {
     unit: 'us' | 'metric'
     onToggle: (newUnit: 'us' | 'metric') => void
 }

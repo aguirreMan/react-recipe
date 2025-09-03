@@ -1,6 +1,7 @@
-import React from 'react'
+import { useState } from 'react'
 import { useParams, useLocation } from 'react-router'
 import useFetchRecipeData from '../hooks/useFetchRecipeData'
+import UnitToggle from './UnitToggle'
 
 export default function SingleRecipePage() {
   const location = useLocation()
@@ -8,9 +9,18 @@ export default function SingleRecipePage() {
 
   const { recipeId } = useParams() as { recipeId?: string }
   const { recipeData, loading, error } = useFetchRecipeData(recipeId)
+  const [currentUnit, setCurrentUnit] = useState<'us' | 'metric'>('us')
+
   if (loading) return <div>..Loading</div>
   if (error) return <div>Error: {error}</div>
   if (!recipeData) return <div>No recipe found with this ID.</div>
+
+
+  function toggleUnitSystem(newUnit: 'us' | 'metric') {
+    setCurrentUnit(newUnit)
+  }
+
+
   return (
     <div className='max-w-5xl mx-auto px-4'>
       <h1 className='text-center mt-6 text-3xl text-custom-header'>
@@ -28,6 +38,12 @@ export default function SingleRecipePage() {
           <span className='text-lg font-semibold'>
             {recipeData?.servings} servings
           </span>
+          <span className='flex flex-row items-start gap-4'>
+            <UnitToggle
+              unit={currentUnit}
+              onToggle={toggleUnitSystem}
+            />
+          </span>
           <div className='flex gap-2'>
             <button className='bg-amber-700 text-white rounded px-4 py-2 cursor-pointer'>+</button>
             <button className='bg-amber-700 text-white rounded px-4 py-2 cursor-pointer'>-</button>
@@ -39,9 +55,9 @@ export default function SingleRecipePage() {
         <div>
           <h2 className='text-xl font-bold mb-2'>Ingredients</h2>
           <ul className='flex flex-col gap-1'>
-            {recipeData.ingredients.extendedIngredients.map(ingredient => (
-              <li key={ingredient.nameClean}>
-                {ingredient.formattedMeasures.us} {ingredient.name}
+            {recipeData.extendedIngredients.map(ingredient => (
+              <li key={ingredient.name}>
+                {currentUnit === 'metric' ? ingredient.formattedMeasures.metric : ingredient.formattedMeasures.us}
               </li>
             ))}
           </ul>

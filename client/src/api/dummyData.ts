@@ -14,19 +14,11 @@ export interface ComplexSearchResponse {
   totalResults: number
 }
 
-
 //These are the interface types for instructions and ingredient data
 
 export interface SpoonacularInstructions {
   number: number,
   step: string
-}
-//This is the data for Ingredientds Data 
-
-export interface SpoonacularIngredients {
-  id: number,
-  servings: number,
-  extendedIngredients: ExtendedIngredients[]
 }
 
 export interface Measures {
@@ -59,7 +51,7 @@ export interface ExtendedIngredients {
 export interface RecipeDetails extends SpoonacularResultsComplexSearch {
   instructions: SpoonacularInstructions[],
   servings: number,
-  ingredients: SpoonacularIngredients
+  extendedIngredients: ExtendedIngredients[]
 }
 
 /* These recipes below were only used for development and testing mode they are not a part of the application
