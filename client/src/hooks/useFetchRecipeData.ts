@@ -21,8 +21,7 @@ export default function useFetchRecipeData(recipeId: string | undefined) {
                     setRecipeData(data)
                     //console.log('fetched Data', data)
                 })
-                
-                
+
                 .catch((err) => {
                     console.error(err)
                     setError('something went wrong fetching the data')
