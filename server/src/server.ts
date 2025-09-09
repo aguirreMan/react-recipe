@@ -2,6 +2,7 @@
 import dotenv from 'dotenv'
 import express, { Application, Request, Response } from 'express'
 import cors from 'cors'
+import { saveRecipe, getRecipe } from './database/cache'
 dotenv.config()
 
 const app: Application = express()
@@ -49,7 +50,7 @@ app.get('/complexSearch', async (req: Request, res: Response) => {
         console.log('fetching spoonacular ', url)
         const response = await fetch(url)
         console.log('done fetching')
-        console.log('status:' , response.status)
+        console.log('status:', response.status)
         if (!response.ok) {
             throw new Error('API error')
         }
@@ -100,7 +101,7 @@ interface MeasureUnit {
 //This is the formatted Measurments i made in the formatMeasurements function this is not returned 
 //by spoonacular
 interface FormattedMeasures {
-    us: string, 
+    us: string,
     metric: string
 }
 
@@ -112,7 +113,15 @@ app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request
     if (!id) {
         return res.status(400).json({ error: 'Missing recipe id' })
     }
-//Fetching both endpoints ingredients, and instructions in parallel
+
+
+    const cachedRecipe = getRecipe(id)
+    if (cachedRecipe) {
+        console.log('caching recipe for id', id)
+        return res.json(cachedRecipe.recipe)
+    }
+
+    //Fetching both endpoints ingredients, and instructions in parallel
     try {
         const instructionsEndPoint = `https://api.spoonacular.com/recipes/${id}/analyzedInstructions?apiKey=${spoonacular_api_key}`
         const ingredientsEndPoint = `https://api.spoonacular.com/recipes/${id}/information?apiKey=${spoonacular_api_key}`
@@ -143,10 +152,10 @@ app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request
         const recipeId: number = ingredientInformation.id
         const servings: number = ingredientInformation.servings
 
-//Function will format ingredients to return name original unit and give me back formatted 
-//measures  
+        //Function will format ingredients to return name original unit and give me back formatted 
+        //measures  
 
-        function formatIngredients(ingredients: ExtendedIngredients[]){
+        function formatIngredients(ingredients: ExtendedIngredients[]) {
             return ingredients.map((ingredient) => {
                 const measures: FormattedMeasures = formatMeasurements(ingredient)
                 return {
@@ -157,8 +166,8 @@ app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request
                 }
             })
         }
-//Function is formmating the measurements to return strings
-        function formatMeasurements(ingredient: ExtendedIngredients): FormattedMeasures{
+        //Function is formmating the measurements to return strings
+        function formatMeasurements(ingredient: ExtendedIngredients): FormattedMeasures {
             const us = ingredient.measures?.us
             const metric = ingredient.measures?.metric
             return {
@@ -168,18 +177,20 @@ app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request
         }
 
         const ingredientsArray = formatIngredients(ingredientInformation.extendedIngredients)
-        
-        res.json({
+
+        const recipeCachedData = {
             recipeId,
             servings,
-            instructions: steps, 
+            instructions: steps,
             ingredients: ingredientsArray
-        })
+        }
 
+        saveRecipe(id, recipeCachedData)
+        res.json(recipeCachedData)
 
     } catch (error) {
         console.error('error happening ')
-        res.status(500).json({error: 'server failed'})
+        res.status(500).json({ error: 'server failed' })
     }
 
 })
