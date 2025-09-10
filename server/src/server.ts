@@ -85,7 +85,8 @@ interface ExtendedIngredients {
     original: string,
     amount: number,
     unit: string,
-    measures: Measures
+    measures: Measures,
+    formattedMeasures: FormattedMeasures
 }
 //This is from Spoonacular raw response this gets modified in the function formatMeasurements
 interface Measures {
@@ -162,7 +163,8 @@ app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request
                     name: ingredient.name,
                     original: ingredient.original,
                     unit: ingredient.unit,
-                    measures
+                    measures: ingredient.measures,
+                    formattedMeasures: measures
                 }
             })
         }
@@ -182,7 +184,7 @@ app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request
             recipeId,
             servings,
             instructions: steps,
-            ingredients: ingredientsArray
+            extendedIngredients: ingredientsArray
         }
 
         saveRecipe(id, recipeCachedData)
