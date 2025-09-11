@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useParams, useLocation } from 'react-router'
 import useFetchRecipeData from '../hooks/useFetchRecipeData'
+import useScaleServings from '../hooks/useScaleServings'
 import UnitToggle from './UnitToggle'
+import { ExtendedIngredients, RecipeDetails } from '../api/dummyData'
 
 export default function SingleRecipePage() {
   const location = useLocation()
@@ -16,13 +18,23 @@ export default function SingleRecipePage() {
   if (!recipeData) return <div>No recipe found with this ID.</div>
 
 
+
   function toggleUnitSystem(newUnit: 'us' | 'metric') {
     setCurrentUnit(newUnit)
   }
 
+  interface Servings extends RecipeDetails {
+    servingsCount: number,
+    originalServingsSize: number,
+  }
+
+  const { servingsSize, incrementServings, decrementServings, resetServings } = useScaleServings(recipeData.servings)
+
+
+
 
   return (
-    <div className='max-w-5xl mx-auto px-4'>
+    <div className='max-w-5xl mx-auto px-4 bg-custom-background-color'>
       <h1 className='text-center mt-6 text-3xl text-custom-header'>
         {recipeObject?.title}
       </h1>
@@ -55,9 +67,9 @@ export default function SingleRecipePage() {
         <div>
           <h2 className='text-xl font-bold mb-2'>Ingredients</h2>
           <ul className='flex flex-col gap-1'>
-            {recipeData.extendedIngredients.map(ingredient => (
+            {recipeData?.extendedIngredients?.map(ingredient => (
               <li key={ingredient.name}>
-                {currentUnit === 'metric' ? ingredient.formattedMeasures.metric : ingredient.formattedMeasures.us}
+                {currentUnit === 'metric' ? ingredient.formattedMeasures?.metric || '' : ingredient.formattedMeasures?.us || ''} {ingredient.name}
               </li>
             ))}
           </ul>

@@ -6,8 +6,7 @@ export default function useFetchRecipeData(recipeId: string | undefined) {
     const [recipeData, setRecipeData] = useState<RecipeDetails | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
-    //console.log('hook being called', recipeId)
-    console.log(recipeData)
+    console.log(recipeData?.extendedIngredients)
 
     useEffect(() => {
         setLoading(true)
