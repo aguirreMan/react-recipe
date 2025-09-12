@@ -3,7 +3,6 @@ import { useParams, useLocation } from 'react-router'
 import useFetchRecipeData from '../hooks/useFetchRecipeData'
 import useScaleServings from '../hooks/useScaleServings'
 import UnitToggle from './UnitToggle'
-import { ExtendedIngredients, RecipeDetails } from '../api/dummyData'
 
 export default function SingleRecipePage() {
   const location = useLocation()
@@ -13,69 +12,64 @@ export default function SingleRecipePage() {
   const { recipeData, loading, error } = useFetchRecipeData(recipeId)
   const [currentUnit, setCurrentUnit] = useState<'us' | 'metric'>('us')
 
+  const { servingsSize, scaleIngredients, incrementServings, decrementServings, resetServings } = useScaleServings(recipeData?.servings || 0, recipeData?.extendedIngredients || [])
+  //console.log(recipeData?.servings)
+
   if (loading) return <div>..Loading</div>
   if (error) return <div>Error: {error}</div>
   if (!recipeData) return <div>No recipe found with this ID.</div>
 
-
+  //console.log(recipeData?.servings)
 
   function toggleUnitSystem(newUnit: 'us' | 'metric') {
     setCurrentUnit(newUnit)
   }
 
-  interface Servings extends RecipeDetails {
-    servingsCount: number,
-    originalServingsSize: number,
-  }
-
-  const { servingsSize, incrementServings, decrementServings, resetServings } = useScaleServings(recipeData.servings)
-
-
-
-
   return (
-    <div className='max-w-5xl mx-auto px-4 bg-custom-background-color'>
-      <h1 className='text-center mt-6 text-3xl text-custom-header'>
+    <div className="max-w-5xl mx-auto px-4">
+      <h1 className="text-center mt-6 text-3xl text-custom-font-title">
         {recipeObject?.title}
       </h1>
-      <div className='mt-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-start'>
-        <div>
+
+      <div className='mt-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-start'>
+        <div className='flex justify-center'>
           <img
             src={recipeObject?.image}
             alt={recipeObject?.title}
-            className='object-cover rounded-lg w-full max-h-[350px]'
-          />
+            className="object-cover rounded-lg max-w-[400px] max-h-[400px]" />
         </div>
-        <div className='flex flex-col items-start gap-4'>
-          <span className='text-lg font-semibold'>
-            {recipeData?.servings} servings
+        <div className="flex flex-col gap-6">
+          <span className="text-lg font-semibold">
+            {servingsSize} servings
           </span>
-          <span className='flex flex-row items-start gap-4'>
-            <UnitToggle
-              unit={currentUnit}
-              onToggle={toggleUnitSystem}
-            />
-          </span>
-          <div className='flex gap-2'>
-            <button className='bg-amber-700 text-white rounded px-4 py-2 cursor-pointer'>+</button>
-            <button className='bg-amber-700 text-white rounded px-4 py-2 cursor-pointer'>-</button>
-            <button className='bg-gray-500 text-white rounded px-4 py-2 cursor-pointer'>Reset</button>
+
+          <UnitToggle unit={currentUnit} onToggle={toggleUnitSystem} />
+
+          <div className="flex gap-2">
+            <button onClick={incrementServings} className='bg-amber-700 text-white rounded px-4 py-2 cursor-pointer'>+</button>
+            <button onClick={decrementServings} className='bg-amber-700 text-white rounded px-4 py-2 cursor-pointer'>-</button>
+            <button onClick={resetServings} className='bg-gray-500 text-white rounded px-4 py-2 cursor-pointer'>Reset</button>
           </div>
         </div>
-      </div>
-      <div className='mt-10 grid grid-cols-1 md:grid-cols-1 gap-8'>
         <div>
-          <h2 className='text-xl font-bold mb-2'>Ingredients</h2>
-          <ul className='flex flex-col gap-1'>
-            {recipeData?.extendedIngredients?.map(ingredient => (
-              <li key={ingredient.name}>
-                {currentUnit === 'metric' ? ingredient.formattedMeasures?.metric || '' : ingredient.formattedMeasures?.us || ''} {ingredient.name}
+          <h2 className="text-xl font-bold mb-2">Ingredients</h2>
+          <ul className="flex flex-col gap-1">
+            {scaleIngredients.map((ingredient, index) => (
+              <li key={index}>
+                {currentUnit === 'us'
+                  ? ingredient.formattedMeasures?.metric
+                  : ingredient.formattedMeasures?.us || ingredient.original}{' '}
+                {ingredient.name}
               </li>
             ))}
           </ul>
         </div>
-        <div className='text-xl font-bold mb-2'>Instructions</div>
-        {recipeData.instructions.map(step => (
+      </div>
+
+      {/* Instructions (full width below grid) */}
+      <div className="mt-10">
+        <h2 className="text-xl font-bold mb-2">Instructions</h2>
+        {recipeData.instructions.map((step) => (
           <p key={step.number}>
             Step {step.number}: {step.step}
           </p>
