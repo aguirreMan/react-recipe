@@ -38,16 +38,13 @@ export default function SingleRecipePage() {
     if (!instructionSteps || instructionSteps.length === 0) return []
     const numberOfSteps = instructionSteps.length
 
-    if (numberOfSteps <= 5) {
-      setInstructionToggle(false)
-      return instructionSteps
-    }
+    if (numberOfSteps <= 5) return instructionSteps
 
     if (numberOfSteps === 6) {
-      instructionSteps.splice(4, 2)
+      return isToggled ? instructionSteps : instructionSteps.slice(0, 4)
     }
     if (numberOfSteps >= 7) {
-      instructionSteps.splice(5, numberOfSteps - 5)
+      return isToggled ? instructionSteps : instructionSteps.slice(0, 5)
     }
   }
 
@@ -95,7 +92,7 @@ export default function SingleRecipePage() {
 
       <div className='mt-10 mb-10'>
         <h2 className='text-custom-header text-xl font-bold mb-2'>Instructions</h2>
-        {recipeData.instructions.map((step) => (
+        {recipeData?.instructions.map((step) => (
           <p className='m-4 p-2' key={step.number}>
             Step {step.number}: {step.step}
           </p>
