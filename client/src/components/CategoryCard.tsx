@@ -1,5 +1,3 @@
-import React from 'react'
-
 interface CategoryCardData {
   title: string,
   imageSrc: string,

@@ -1,16 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-    --color-custom-background-color: #4dd179;
+    --color-custom-background-color: #FEFEFE;
     --color-custom-header: #3A3A3A;
     --color-custom-font-title: #f2f0ed;
     --color-custom-searchbar: #E8E8E8;
     --color-custom-searchbar-hover: #D4D4D4;
-    --color-custom-button: #E67E22;
-    --color-custom-button-hover: #CC5500;
-    --color-custom-body: #F8FAF6;
+    --color-custom-button: #169434;
+    --color-custom-button-reset: #6C757D;
+    --color-custom-button-hover: #0F6B28;
     --color-custom-category-card: #71a35f;
     --color-custom-category-card-hover: #436337;
     --color-custom-card-titles: #f7f3ed;
     --color-custom-card-title-hover: #edebe8;
+    --color-custom-usa-metric-toggle: #E74C3C;
+
+    --default-font-family: 'Nunito Sans', ui-sans-serif, system-ui, sans-serif;
+
+
 }

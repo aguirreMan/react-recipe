@@ -3,6 +3,7 @@ import { useParams, useLocation } from 'react-router'
 import useFetchRecipeData from '../hooks/useFetchRecipeData'
 import useScaleServings from '../hooks/useScaleServings'
 import UnitToggle from './UnitToggle'
+import { SpoonacularInstructions } from '../api/dummyData'
 
 export default function SingleRecipePage() {
   const location = useLocation()
@@ -10,50 +11,76 @@ export default function SingleRecipePage() {
 
   const { recipeId } = useParams() as { recipeId?: string }
   const { recipeData, loading, error } = useFetchRecipeData(recipeId)
+  //current unit is for the unit toggle
   const [currentUnit, setCurrentUnit] = useState<'us' | 'metric'>('us')
+  console.log(recipeData)
+
+  // This is for toggling instructions
+
+  const [instructionsToggle, setInstructionToggle] = useState<boolean>(false)
 
   const { servingsSize, scaleIngredients, incrementServings, decrementServings, resetServings } = useScaleServings(recipeData?.servings || 0, recipeData?.extendedIngredients || [])
-  //console.log(recipeData?.servings)
+
 
   if (loading) return <div>..Loading</div>
   if (error) return <div>Error: {error}</div>
   if (!recipeData) return <div>No recipe found with this ID.</div>
 
-  //console.log(recipeData?.servings)
-
   function toggleUnitSystem(newUnit: 'us' | 'metric') {
     setCurrentUnit(newUnit)
   }
 
+  function toggleInstructions() {
+    setInstructionToggle(prev => !prev)
+  }
+
+  function toggleRestofInstructions(instructionSteps: SpoonacularInstructions[], isToggled: boolean) {
+    if (!instructionSteps || instructionSteps.length === 0) return []
+    const numberOfSteps = instructionSteps.length
+
+    if (numberOfSteps <= 5) {
+      setInstructionToggle(false)
+      return instructionSteps
+    }
+
+    if (numberOfSteps === 6) {
+      instructionSteps.splice(4, 2)
+    }
+    if (numberOfSteps >= 7) {
+      instructionSteps.splice(5, numberOfSteps - 5)
+    }
+  }
+
   return (
-    <div className="max-w-5xl mx-auto px-4">
-      <h1 className="text-center mt-6 text-3xl text-custom-font-title">
-        {recipeObject?.title}
-      </h1>
+    <div className='max-w-5xl mx-auto px-4'>
+      <div className='flex justify-between items-center mt-6'>
+        <h1 className='text-center mt-6 text-3xl text-custom-header'>
+          {recipeObject?.title}
+        </h1>
+        <UnitToggle unit={currentUnit} onToggle={toggleUnitSystem} />
+      </div>
 
       <div className='mt-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-start'>
         <div className='flex justify-center'>
           <img
             src={recipeObject?.image}
             alt={recipeObject?.title}
-            className="object-cover rounded-lg max-w-[400px] max-h-[400px]" />
+            className='object-cover rounded-lg max-w-[400px] max-h-[400px]' />
         </div>
-        <div className="flex flex-col gap-6">
-          <span className="text-lg font-semibold">
+        <div className='flex flex-col gap-6 items-center'>
+          <span className='text-lg font-semibold'>
             {servingsSize} servings
           </span>
 
-          <UnitToggle unit={currentUnit} onToggle={toggleUnitSystem} />
-
-          <div className="flex gap-2">
-            <button onClick={incrementServings} className='bg-amber-700 text-white rounded px-4 py-2 cursor-pointer'>+</button>
-            <button onClick={decrementServings} className='bg-amber-700 text-white rounded px-4 py-2 cursor-pointer'>-</button>
-            <button onClick={resetServings} className='bg-gray-500 text-white rounded px-4 py-2 cursor-pointer'>Reset</button>
+          <div className='flex gap-2'>
+            <button onClick={incrementServings} className='bg-custom-button text-white rounded px-4 py-2 cursor-pointer'>+</button>
+            <button onClick={decrementServings} className='bg-custom-button text-white rounded px-4 py-2 cursor-pointer'>-</button>
+            <button onClick={resetServings} className='bg-custom-button-reset text-white rounded px-4 py-2 cursor-pointer'>Reset</button>
           </div>
         </div>
         <div>
-          <h2 className="text-xl font-bold mb-2">Ingredients</h2>
-          <ul className="flex flex-col gap-1">
+          <h2 className='text-xl text-custom-header font-bold mb-2'>Ingredients</h2>
+          <ul className='flex flex-col gap-1'>
             {scaleIngredients.map((ingredient, index) => (
               <li key={index}>
                 {currentUnit === 'us'
@@ -66,11 +93,10 @@ export default function SingleRecipePage() {
         </div>
       </div>
 
-      {/* Instructions (full width below grid) */}
-      <div className="mt-10">
-        <h2 className="text-xl font-bold mb-2">Instructions</h2>
+      <div className='mt-10 mb-10'>
+        <h2 className='text-custom-header text-xl font-bold mb-2'>Instructions</h2>
         {recipeData.instructions.map((step) => (
-          <p key={step.number}>
+          <p className='m-4 p-2' key={step.number}>
             Step {step.number}: {step.step}
           </p>
         ))}

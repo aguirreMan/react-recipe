@@ -1,4 +1,3 @@
-import React from 'react'
 import CategoryCard from './CategoryCard'
 //Image imports
 import breakfastImage from '../assets/images/breakfast.jpg'
@@ -19,14 +18,14 @@ interface CategoryProps {
 
 export default function Categories({ onCategoryClicked }: CategoryProps) {
   const categories: Category[] = [
-    {title: 'Breakfast', image: breakfastImage},
-    {title: 'Lunch', image: lunchImage},
-    {title: 'Seafood', image: seafoodImage},
-    {title: 'Vegan', image: veganImage},
-    {title: 'Dinner', image: dinnerImage},
-    {title: 'Desserts', image: dessertsImage}
+    { title: 'Breakfast', image: breakfastImage },
+    { title: 'Lunch', image: lunchImage },
+    { title: 'Seafood', image: seafoodImage },
+    { title: 'Vegan', image: veganImage },
+    { title: 'Dinner', image: dinnerImage },
+    { title: 'Desserts', image: dessertsImage }
   ]
-  function categoryCardClicked(categoryTitle: string){
+  function categoryCardClicked(categoryTitle: string) {
     onCategoryClicked(categoryTitle)
   }
 
@@ -34,10 +33,10 @@ export default function Categories({ onCategoryClicked }: CategoryProps) {
     <div className='grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 mt-18 justify-items-center gap-4'>
       {categories.map((category) => (
         <CategoryCard onClick={() => categoryCardClicked(category.title)}
-        key={category.title} 
-        title={category.title} 
-        imageSrc={category.image}
-        className='w-full' />
+          key={category.title}
+          title={category.title}
+          imageSrc={category.image}
+          className='w-full' />
       ))}
     </div>
   )
