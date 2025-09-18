@@ -3,6 +3,7 @@ import { useParams, useLocation } from 'react-router'
 import useFetchRecipeData from '../hooks/useFetchRecipeData'
 import useScaleServings from '../hooks/useScaleServings'
 import UnitToggle from './UnitToggle'
+import LoadMoreInstructionsButton from './LoadMoreInstructionsButton'
 import { SpoonacularInstructions } from '../api/dummyData'
 
 export default function SingleRecipePage() {
@@ -13,7 +14,7 @@ export default function SingleRecipePage() {
   const { recipeData, loading, error } = useFetchRecipeData(recipeId)
   //current unit is for the unit toggle
   const [currentUnit, setCurrentUnit] = useState<'us' | 'metric'>('us')
-  console.log(recipeData)
+  //console.log(recipeData)
 
   // This is for toggling instructions
 
@@ -33,6 +34,7 @@ export default function SingleRecipePage() {
   function toggleInstructions() {
     setInstructionToggle(prev => !prev)
   }
+  console.log(recipeData?.instructions)
 
   function toggleRestofInstructions(instructionSteps: SpoonacularInstructions[], isToggled: boolean) {
     if (!instructionSteps || instructionSteps.length === 0) return []
@@ -48,6 +50,16 @@ export default function SingleRecipePage() {
     }
   }
 
+  function calculateInstructionDifference(totalSteps: number, isToggled: boolean) {
+    if (totalSteps <= 5) return 0
+    if (isToggled) return 0
+    if (totalSteps === 6) return totalSteps - 4
+    if (totalSteps >= 7) return totalSteps - 5
+    return 0
+  }
+
+  const instructionsToDisplay = toggleRestofInstructions(recipeData.instructions, instructionsToggle)
+  console.log(instructionsToDisplay)
   return (
     <div className='max-w-5xl mx-auto px-4'>
       <div className='flex justify-between items-center mt-6'>
@@ -92,11 +104,19 @@ export default function SingleRecipePage() {
 
       <div className='mt-10 mb-10'>
         <h2 className='text-custom-header text-xl font-bold mb-2'>Instructions</h2>
-        {recipeData?.instructions.map((step) => (
+        {instructionsToDisplay?.map((step) => (
           <p className='m-4 p-2' key={step.number}>
             Step {step.number}: {step.step}
           </p>
         ))}
+        {recipeData?.instructions.length > 5 && (
+          <div className='pt-2 flex justify-center'>
+            <LoadMoreInstructionsButton
+              isInstructionsToggled={instructionsToggle}
+              instructionSteps={calculateInstructionDifference(recipeData?.instructions.length, instructionsToggle)}
+              onInstructionToggle={toggleInstructions} />
+          </div>
+        )}
       </div>
     </div>
   )

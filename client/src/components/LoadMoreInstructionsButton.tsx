@@ -9,8 +9,9 @@ export interface InstructionsButton {
 export default function LoadMoreInstructionsButton({ isInstructionsToggled, instructionSteps, onInstructionToggle }: InstructionsButton) {
     return (
         <div className='mb-6'>
-            <button onClick={onInstructionToggle} className='bg-custom-button px-4 py-2 rounded-2xl'>See full instructions List</button>
-            {isInstructionsToggled ? 'Hide Instructions' : `Show ${instructionSteps} more steps`}
+            <button onClick={onInstructionToggle} className='bg-custom-button px-4 py-2 rounded-2xl cursor-pointer'>
+                {isInstructionsToggled ? 'Hide Instructions' : `Show ${instructionSteps} more steps`}
+            </button>
         </div>
     )
 }
