@@ -6,7 +6,7 @@ import SpoonacularRecipes from './SpoonacularRecipes'
 import LoadMoreRecipesButton from './LoadMoreRecipesButton'
 import { SpoonacularResultsComplexSearch, ComplexSearchResponse } from '../api/dummyData'
 
-export default function RecipesPage({ onCategoryClick }: { onCategoryClick: (query: string) => void }) {
+export default function RecipesPage() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
 
@@ -59,13 +59,12 @@ export default function RecipesPage({ onCategoryClick }: { onCategoryClick: (que
     function navigateRecipes(recipe: SpoonacularResultsComplexSearch) {
         navigate(
             `/recipes/${recipe.id}?query=${encodeURIComponent(searchQuery)}&page=${page}&isCategory=${isRandom}`,
-            { state: { recipe } } // optional fast-render
+            { state: { recipe } }
         )
     }
 
     // Handle category clicks
     function handleCategoryClick(categoryTitle: string) {
-        onCategoryClick(categoryTitle)
         navigate(`/recipes?query=${encodeURIComponent(categoryTitle)}&page=1&isCategory=true`)
     }
 

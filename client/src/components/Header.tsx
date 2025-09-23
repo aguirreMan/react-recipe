@@ -1,8 +1,8 @@
 import logo from '../assets/images/logo.png'
-import SearchBar, { SearchBarData } from './SearchBar'
+import SearchBar from './SearchBar'
 
 
-export default function Header({ onSearch }: SearchBarData) {
+export default function Header() {
     return (
         <header className='bg-custom-header shadow-sm sticky top-0 z-50 h-18 '>
             <div className='px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col md:flex-row 
@@ -14,7 +14,7 @@ export default function Header({ onSearch }: SearchBarData) {
                     </span>
                 </h1>
                 <div className='w-full md:w-auto'>
-                    <SearchBar onSearch={onSearch} />
+                    <SearchBar />
                 </div>
             </div>
         </header>

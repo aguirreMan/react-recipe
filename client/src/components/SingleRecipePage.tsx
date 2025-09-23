@@ -33,7 +33,7 @@ export default function SingleRecipePage() {
   // Merge recipeObject with fetched data for robust rendering
   const recipeToRender = {
     title: recipeObject?.title || recipeData?.title || 'Recipe',
-    image: recipeObject?.image || recipeData?.image || '/placeholder.jpg',
+    image: recipeObject?.image || recipeData?.image
   }
 
   function toggleUnitSystem(newUnit: 'us' | 'metric') {
