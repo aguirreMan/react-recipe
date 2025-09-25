@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router'
 import useFetchRecipeData from '../hooks/useFetchRecipeData'
 import useScaleServings from '../hooks/useScaleServings'
+import Loading from './Loading'
 import UnitToggle from './UnitToggle'
 import GoBackArrow from './GoBackArrow'
 import LoadMoreInstructionsButton from './LoadMoreInstructionsButton'
@@ -26,7 +27,7 @@ export default function SingleRecipePage() {
   const { servingsSize, scaleIngredients, incrementServings, decrementServings, resetServings } =
     useScaleServings(recipeData?.servings || 0, recipeData?.extendedIngredients || [])
 
-  if (loading) return <div>Loading recipe...</div>
+  if (loading) return <Loading message='fetching recipe' />
   if (error) return <div>Error: {error}</div>
   if (!recipeData) return <div>No recipe found with this ID.</div>
 

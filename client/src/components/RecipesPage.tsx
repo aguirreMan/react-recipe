@@ -4,6 +4,7 @@ import Categories from './Categories'
 import useFetchRecipes from '../hooks/useFetchRecipes'
 import SpoonacularRecipes from './SpoonacularRecipes'
 import LoadMoreRecipesButton from './LoadMoreRecipesButton'
+import Loading from './Loading'
 import { SpoonacularResultsComplexSearch, ComplexSearchResponse } from '../api/dummyData'
 
 export default function RecipesPage() {
@@ -21,6 +22,11 @@ export default function RecipesPage() {
     const [paginate, setPaginate] = useState(false)
     const [showCategories, setShowCategories] = useState(true)
     const [hasSearched, setHasSearched] = useState(false)
+
+
+    //Create a custom loader message 
+    const loaderMesage = searchQuery ? isRandom ? `preparing your ${searchQuery} recipes`
+        : `preparing your ${searchQuery} recipes` : 'Fetching your recipes'
 
     // Fetch recipes based on URL params
     const recipeData: ComplexSearchResponse | null = useFetchRecipes({
@@ -82,7 +88,7 @@ export default function RecipesPage() {
             {!hasSearched ? (
                 <div className='relative flex justify-center group pt-6'></div>
             ) : recipeData?.results.length === 0 ? (
-                <p>No recipes found</p>
+                <Loading message={loaderMesage} />
             ) : (
                 <div className='px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto'>
                     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6'>
@@ -95,7 +101,7 @@ export default function RecipesPage() {
                             />
                         ))}
                     </div>
-
+                    {/*Pagination buttons for loading more recipes*/}
                     <div className='flex justify-center mt-4'>
                         {!isRandom && recipesLoading && paginate && (
                             <LoadMoreRecipesButton onClick={loadMoreRecipes}>Load More Recipes!</LoadMoreRecipesButton>
@@ -104,7 +110,7 @@ export default function RecipesPage() {
                             <LoadMoreRecipesButton onClick={loadMoreRecipes}>Load more Random Recipes!</LoadMoreRecipesButton>
                         )}
                     </div>
-
+                    {/* Toggle category cards visibility*/}
                     {recipesLoading && recipes.length > 0 && (
                         <div className='flex justify-center mt-4'>
                             <button
@@ -118,12 +124,13 @@ export default function RecipesPage() {
                     )}
                 </div>
             )}
-
+            {/* Render Category cards at the bottom */}
             {showCategories && (
-                <div className='px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mt-6'>
+                <div className='px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mt-6 pb-4'>
                     <Categories onCategoryClicked={handleCategoryClick} />
                 </div>
             )}
         </div>
+
     )
 }
