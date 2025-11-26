@@ -95,13 +95,13 @@ export default function SingleRecipePage() {
         <div className='flex flex-col gap-6 items-center'>
           <span className='text-lg font-semibold'>{servingsSize} servings</span>
           <div className='flex gap-2'>
-            <button onClick={incrementServings} className='bg-custom-button text-white rounded px-4 py-2'>
+            <button onClick={incrementServings} className='bg-custom-button text-white rounded px-4 py-2 cursor-pointer'>
               +
             </button>
-            <button onClick={decrementServings} className='bg-custom-button text-white rounded px-4 py-2'>
+            <button onClick={decrementServings} className='bg-custom-button text-white rounded px-4 py-2 cursor-pointer'>
               -
             </button>
-            <button onClick={resetServings} className='bg-custom-button-reset text-white rounded px-4 py-2'>
+            <button onClick={resetServings} className='bg-custom-button-reset text-white rounded px-4 py-2 cursor-pointer'>
               Reset
             </button>
           </div>

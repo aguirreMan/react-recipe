@@ -7,8 +7,8 @@ export interface GoBackButton {
 
 export default function GoBackArrow({ onClick }: GoBackButton) {
     return (
-        <button onClick={onClick} className='fixed top-6 left-6 px-4 py-2 bg-custom-button
-             hover:bg-custom-button-hover rounded-2xl cursor-pointer text-white z-10'>
+        <button onClick={onClick} className='fixed top-24 left-6 px-4 py-2 bg-custom-button
+             hover:bg-custom-button-hover rounded-2xl cursor-pointer text-white z-50 sm: mt-10'>
             Go back
         </button>
     )

@@ -1,8 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useNavigate } from 'react-router'
 
-
-
 export default function SearchBar() {
     const [query, setQuery] = useState<string>('')
     const navigation = useNavigate()
