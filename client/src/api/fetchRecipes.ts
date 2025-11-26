@@ -1,7 +1,9 @@
 import { ComplexSearchResponse } from './dummyData'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+
 export async function fetchRecipes(query: string, page: number = 1, isRandom: boolean = false): Promise<ComplexSearchResponse> {
-    const complexSearch: string = 'http://localhost:3000/complexSearch'
+    const complexSearch: string = `${API_URL}/complexSearch`
     const recipesPerPage: number = 12
     const offset: number = (page - 1) * recipesPerPage
     let apiUrl: string = `${complexSearch}?query=${query}&number=${recipesPerPage}`
