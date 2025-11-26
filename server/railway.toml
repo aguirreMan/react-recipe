@@ -1,5 +1,0 @@
-[build]
-providers = ["node"]
-
-[build.node]
-version = "20"
