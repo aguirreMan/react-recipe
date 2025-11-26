@@ -52,13 +52,14 @@ app.get('/complexSearch', async (req: Request, res: Response) => {
         console.log('done fetching')
         console.log('status:', response.status)
         if (!response.ok) {
-            throw new Error('API error')
+            const errorText = await response.text()
+            throw new Error(`API error: ${response.status} - ${errorText}`)
         }
         const data: ComplexSearchResponse = await response.json()
         res.json(data)
     } catch (error: any) {
         console.error(error.message)
-        res.status(500).json({ error: 'Failed to fetch complex search results' })
+        res.status(500).json({ error: 'Failed to fetch complex search results', details: error.message })
     }
 })
 
