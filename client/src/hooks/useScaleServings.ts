@@ -1,57 +1,78 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { ExtendedIngredients } from '../api/dummyData'
 import formatAmounts from '../api/formatAmounts'
 
-export default function useScaleServings(initialServings: number, initialIngredients: ExtendedIngredients[]) {
-    const [servingsSize, setServingsSize] = useState(initialServings)
-    const [scaleIngredients, setScaleIngredients] = useState(initialIngredients)
-    //increment spoonaculars default servings returned by the api
+export default function useScaleServings(
+    initialServings: number,
+    initialIngredients: ExtendedIngredients[]
+) {
+    console.log('recalculating ingredients')
+
+    const validInitialServings = initialServings > 0 ? initialServings : 1
+
+    const [servingsSize, setServingsSize] = useState(validInitialServings)
+
+    //  DERIVED STATE  calculate directly, don't store in state
+    const scaleIngredients = useMemo(() => {
+        console.log(' useMemo recalculating ingredients')
+        //const start = performance.now()
+
+        if (!initialIngredients?.length || initialServings <= 0) {
+            return initialIngredients || []
+        }
+
+        const scaleFormula = servingsSize / initialServings
+
+        const result = initialIngredients.map(ingredient => {
+            if (!ingredient.measures?.us?.amount || !ingredient.measures?.metric?.amount) {
+                return ingredient
+            }
+
+            const scaledAmountUS = ingredient.measures.us.amount * scaleFormula
+            const scaledAmountMetric = ingredient.measures.metric.amount * scaleFormula
+
+            return {
+                ...ingredient,
+                measures: {
+                    us: {
+                        ...ingredient.measures.us,
+                        amount: scaledAmountUS
+                    },
+                    metric: {
+                        ...ingredient.measures.metric,
+                        amount: scaledAmountMetric
+                    }
+                },
+                formattedMeasures: {
+                    us: `${formatAmounts(scaledAmountUS)} 
+                    ${ingredient.measures.us.unitShort ||
+                        ingredient.measures.us.unitLong}`,
+                    metric: `${formatAmounts(scaledAmountMetric)} 
+                    ${ingredient.measures.metric.unitShort ||
+                        ingredient.measures.metric.unitLong}`
+                }
+            }
+        })
+
+        //const end = performance.now()
+        //console.log(`⏱️ Calculation took ${(end - start).toFixed(2)}ms`)
+
+        return result
+
+    }, [servingsSize, initialServings, initialIngredients])
+    // ☝️ Only recalculates when these ACTUALLY change
+
     function incrementServings() {
         setServingsSize(prev => prev + 1)
     }
-    //decrement spoonaculars default servings we only wont allow to decrement below inital servings from spoonacular
+
     function decrementServings() {
-        setServingsSize(prev => (prev > initialServings ? prev - 1 : initialServings))
+        setServingsSize(prev => Math.max(prev - 1, validInitialServings))
     }
 
     function resetServings() {
-        setServingsSize(initialServings)
+        setServingsSize(validInitialServings)
     }
-
-    useEffect(() => {
-        if (!initialIngredients) return
-        if (initialServings > 0 && servingsSize === 0) {
-            setServingsSize(initialServings)
-        }
-        const scaleFormula = servingsSize / initialServings
-        const newIngredientsArray = initialIngredients.map(newIngredient => {
-
-            if (newIngredient.measures?.us.amount && newIngredient.measures?.metric.amount) {
-                const scaledAmountUS = newIngredient.measures?.us?.amount * scaleFormula
-                const scaledAmountMetric = newIngredient.measures?.metric?.amount * scaleFormula
-                return {
-                    ...newIngredient,
-                    amount: scaledAmountUS,
-                    measures: {
-                        us: {
-                            ...newIngredient.measures.us,
-                            amount: scaledAmountUS
-                        },
-                        metric: {
-                            ...newIngredient.measures.metric,
-                            amount: scaledAmountMetric
-                        }
-                    },
-                    formattedMeasures: {
-                        us: `${formatAmounts(scaledAmountUS)} ${newIngredient.measures?.us.unitShort || newIngredient.measures?.us.unitLong}`,
-                        metric: `${formatAmounts(scaledAmountMetric)} ${newIngredient.measures?.metric.unitShort || newIngredient.measures?.metric.unitLong}`
-                    }
-                }
-            }
-            return newIngredient
-        })
-        setScaleIngredients(newIngredientsArray)
-    }, [servingsSize, initialServings, initialIngredients])
 
     return {
         servingsSize,

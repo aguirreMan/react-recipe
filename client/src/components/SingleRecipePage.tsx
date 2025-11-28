@@ -12,7 +12,7 @@ export default function SingleRecipePage() {
   const { recipeId } = useParams<{ recipeId: string }>()
   const { recipeData, loading, error } = useFetchRecipeData(recipeId)
   const location = useLocation()
-  const recipeObject = location.state?.recipe // optional fast-render
+  const recipeObject = location.state?.recipe
   const [currentUnit, setCurrentUnit] = useState<'us' | 'metric'>('us')
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
