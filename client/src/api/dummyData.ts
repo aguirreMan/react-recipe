@@ -52,31 +52,3 @@ export interface RecipeDetails extends SpoonacularResultsComplexSearch {
   servings: number,
   extendedIngredients: ExtendedIngredients[]
 }
-
-/* These recipes below were only used for development and testing mode they are not a part of the application
-export const dummyRecipes: ComplexSearchResponse = {
-  results: [
-    {
-      id: 1,
-      title: "Spaghetti Carbonara",
-      image: "https://spoonacular.com/recipeImages/1-312x231.jpg",
-      imageType: "jpg",
-    },
-    {
-      id: 2,
-      title: "Chicken Parmesan",
-      image: "https://spoonacular.com/recipeImages/2-312x231.jpg",
-      imageType: "jpg",
-    },
-    {
-      id: 3,
-      title: "Vegan Tacos",
-      image: "https://spoonacular.com/recipeImages/3-312x231.jpg",
-      imageType: "jpg",
-    },
-  ],
-  offset: 0,
-  number: 3,
-  totalResults: 50,
-}
-  */

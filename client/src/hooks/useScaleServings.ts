@@ -1,22 +1,21 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { ExtendedIngredients } from '../api/dummyData'
 import formatAmounts from '../api/formatAmounts'
 
 export default function useScaleServings(
-    initialServings: number,
-    initialIngredients: ExtendedIngredients[]
+  initialServings: number,
+  initialIngredients: ExtendedIngredients[]
 ) {
-    console.log('recalculating ingredients')
 
-    const validInitialServings = initialServings > 0 ? initialServings : 1
+  const [servingsSize, setServingsSize] = useState(() => initialServings)
 
-    const [servingsSize, setServingsSize] = useState(validInitialServings)
+  useEffect(() => {
+    if (initialServings && initialServings > 0) {
+      setServingsSize(initialServings)
+    }
+  },[initialServings])
 
-    //  DERIVED STATE  calculate directly, don't store in state
     const scaleIngredients = useMemo(() => {
-        console.log(' useMemo recalculating ingredients')
-        //const start = performance.now()
-
         if (!initialIngredients?.length || initialServings <= 0) {
             return initialIngredients || []
         }
@@ -44,36 +43,31 @@ export default function useScaleServings(
                     }
                 },
                 formattedMeasures: {
-                    us: `${formatAmounts(scaledAmountUS)} 
+                    us: `${formatAmounts(scaledAmountUS)}
                     ${ingredient.measures.us.unitShort ||
                         ingredient.measures.us.unitLong}`,
-                    metric: `${formatAmounts(scaledAmountMetric)} 
+                    metric: `${formatAmounts(scaledAmountMetric)}
                     ${ingredient.measures.metric.unitShort ||
                         ingredient.measures.metric.unitLong}`
                 }
             }
         })
 
-        //const end = performance.now()
-        //console.log(`⏱️ Calculation took ${(end - start).toFixed(2)}ms`)
-
         return result
 
     }, [servingsSize, initialServings, initialIngredients])
-    // ☝️ Only recalculates when these ACTUALLY change
 
     function incrementServings() {
         setServingsSize(prev => prev + 1)
     }
 
     function decrementServings() {
-        setServingsSize(prev => Math.max(prev - 1, validInitialServings))
+        setServingsSize(prev => Math.max(prev - 1, initialServings))
     }
 
     function resetServings() {
-        setServingsSize(validInitialServings)
+        setServingsSize(initialServings)
     }
-
     return {
         servingsSize,
         scaleIngredients,

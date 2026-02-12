@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router'
+import { useParams, useSearchParams, useNavigate } from 'react-router'
 import useFetchRecipeData from '../hooks/useFetchRecipeData'
 import useScaleServings from '../hooks/useScaleServings'
 import Loading from './Loading'
@@ -11,13 +11,12 @@ import { SpoonacularInstructions } from '../api/dummyData'
 export default function SingleRecipePage() {
   const { recipeId } = useParams<{ recipeId: string }>()
   const { recipeData, loading, error } = useFetchRecipeData(recipeId)
-  const location = useLocation()
-  const recipeObject = location.state?.recipe
+  //const location = useLocation()
+  //const recipeObject = location.state?.recipe
   const [currentUnit, setCurrentUnit] = useState<'us' | 'metric'>('us')
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
 
-  // URL-driven back navigation
   const querySearched = searchParams.get('query') || ''
   const pageNumber = searchParams.get('page') || '1'
   const ifCategory = searchParams.get('isCategory') || ''
@@ -31,11 +30,7 @@ export default function SingleRecipePage() {
   if (error) return <div>Error: {error}</div>
   if (!recipeData) return <div>No recipe found with this ID.</div>
 
-  // Merge recipeObject with fetched data for robust rendering
-  const recipeToRender = {
-    title: recipeObject?.title || recipeData?.title || 'Recipe',
-    image: recipeObject?.image || recipeData?.image
-  }
+  const recipeToRender = recipeData
 
   function toggleUnitSystem(newUnit: 'us' | 'metric') {
     setCurrentUnit(newUnit)
@@ -50,26 +45,16 @@ export default function SingleRecipePage() {
   }
 
   function toggleRestofInstructions(instructionSteps: SpoonacularInstructions[], isToggled: boolean) {
-    if (!instructionSteps || instructionSteps.length === 0) return []
-    const numberOfSteps = instructionSteps.length
-
-    if (numberOfSteps <= 5) return instructionSteps
-
-    if (numberOfSteps === 6) {
-      return isToggled ? instructionSteps : instructionSteps.slice(0, 4)
-    }
-    if (numberOfSteps >= 7) {
-      return isToggled ? instructionSteps : instructionSteps.slice(0, 5)
-    }
+    if (!instructionSteps?.length) return []
+    const defaultNumberOfStepsToRender = 4
+    if (isToggled) return instructionSteps
+    return instructionSteps.slice(0, defaultNumberOfStepsToRender)
   }
 
-
-  function calculateInstructionDifference(totalSteps: number, isToggled: boolean) {
-    if (totalSteps <= 5) return 0
-    if (isToggled) return 0
-    if (totalSteps === 6) return totalSteps - 4
-    if (totalSteps >= 7) return totalSteps - 5
-    return 0
+  function calculateInstructionDifference(totalSteps: number) {
+    const defaultNumberOfStepsToRender = 4
+    if (totalSteps <= defaultNumberOfStepsToRender) return 0
+   return totalSteps - defaultNumberOfStepsToRender
   }
 
   const instructionsToDisplay = toggleRestofInstructions(recipeData.instructions, instructionsToggle)
@@ -106,7 +91,7 @@ export default function SingleRecipePage() {
             </button>
           </div>
         </div>
-
+        {/*Ingredients section */}
         <div>
           <h2 className='text-xl text-custom-header font-bold mb-2'>Ingredients</h2>
           <ul className='flex flex-col gap-1'>
@@ -121,7 +106,8 @@ export default function SingleRecipePage() {
           </ul>
         </div>
       </div>
-
+      {/* Instructions Section  */}
+      <div className='my-12 h-[1px] bg-gradient-to-r from-transparent via-gray-700 to-transparent' />
       <div className='mt-10 mb-10'>
         <h2 className='text-custom-header text-xl font-bold mb-2'>Instructions</h2>
         {instructionsToDisplay?.map(step => (
@@ -130,11 +116,11 @@ export default function SingleRecipePage() {
           </p>
         ))}
 
-        {recipeData.instructions.length > 5 && (
+        {recipeData.instructions?.length > 4 && (
           <div className='pt-2 flex justify-center'>
             <LoadMoreInstructionsButton
               isInstructionsToggled={instructionsToggle}
-              instructionSteps={calculateInstructionDifference(recipeData?.instructions.length, instructionsToggle)}
+              instructionSteps={calculateInstructionDifference(recipeData?.instructions.length)}
               onInstructionToggle={toggleInstructions}
             />
           </div>

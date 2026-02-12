@@ -6,7 +6,6 @@ export default function useFetchRecipeData(recipeId: string | undefined) {
     const [recipeData, setRecipeData] = useState<RecipeDetails | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
-    //console.log(recipeData?.extendedIngredients)
 
     useEffect(() => {
         setLoading(true)
@@ -14,11 +13,9 @@ export default function useFetchRecipeData(recipeId: string | undefined) {
         setRecipeData(null)
 
         if (recipeId) {
-            //console.log('fetching recipe with', recipeId)
             fetchRecipeData(recipeId)
                 .then((data) => {
                     setRecipeData(data)
-                    //console.log('fetched Data', data)
                 })
 
                 .catch((err) => {
