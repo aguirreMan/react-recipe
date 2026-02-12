@@ -26,7 +26,7 @@ interface ComplexSearchResponse {
     number: number,
     totalResults: number
 }
-//Route to call complex Search endpoint from Spoonacular 
+//Route to call complex Search endpoint from Spoonacular
 app.get('/complexSearch', async (req: Request, res: Response) => {
     console.log('route was hit ')
     const query = req.query.query as string | undefined
@@ -75,11 +75,14 @@ interface SpoonacularInstructionObject {
 
 //Ingredients interfaces
 interface IngredientData {
-    id: number,
-    servings: number,
-    extendedIngredients: ExtendedIngredients[]
+     id: number
+     title: string
+     image: string
+     imageType?: string
+     servings: number
+     extendedIngredients: ExtendedIngredients[]
 }
-//Raw extendedIngredients data from spoonacular 
+//Raw extendedIngredients data from spoonacular
 interface ExtendedIngredients {
     name: string,
     nameClean: string,
@@ -100,14 +103,14 @@ interface MeasureUnit {
     unitShort: string,
     unitLong?: string
 }
-//This is the formatted Measurments i made in the formatMeasurements function this is not returned 
+//This is the formatted Measurments i made in the formatMeasurements function this is not returned
 //by spoonacular
 interface FormattedMeasures {
     us: string,
     metric: string
 }
 
-//Route logic for both the instructions endpoint and ingredients 
+//Route logic for both the instructions endpoint and ingredients
 app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request, res: Response) => {
     const { id } = req.params as { id: string }
     const apiKey: string = spoonacular_api_key
@@ -154,8 +157,8 @@ app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request
         const recipeId: number = ingredientInformation.id
         const servings: number = ingredientInformation.servings
 
-        //Function will format ingredients to return name original unit and give me back formatted 
-        //measures  
+        //Function will format ingredients to return name original unit and give me back formatted
+        //measures
 
         function formatIngredients(ingredients: ExtendedIngredients[]) {
             return ingredients.map((ingredient) => {
@@ -181,8 +184,11 @@ app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request
 
         const ingredientsArray = formatIngredients(ingredientInformation.extendedIngredients)
 
-        const recipeCachedData = {
-            recipeId,
+      const recipeCachedData = {
+            id: ingredientInformation.id,
+            title: ingredientInformation.title,
+            image: ingredientInformation.image,
+            imageType: ingredientInformation.imageType,
             servings,
             instructions: steps,
             extendedIngredients: ingredientsArray
