@@ -1,4 +1,5 @@
 import Database from 'better-sqlite3'
+import { Recipe } from '../types/types'
 
 const database = new Database('recipes.db')
 
@@ -10,19 +11,20 @@ database.prepare(`
   )
 `).run()
 
-interface RecipeData {
-    data: string,
-    cachedAt?: number
-}
-
-export function saveRecipe(id: string, data: unknown) {
+export function saveRecipe(id: string, data: Recipe) {
     const stmt = database.prepare('INSERT OR REPLACE INTO recipes (id, data, cachedAt) VALUES (?, ?, ?)')
     stmt.run(id, JSON.stringify(data), Date.now())
 }
 
+export function getRecipe(id: string): { recipe: Recipe; cachedAt: number } | null {
+  const stmt = database.prepare('SELECT data, cachedAt FROM recipes WHERE id = ?')
+  const row = stmt.get(id) as { data: string; cachedAt: number } | undefined
 
-export function getRecipe(id: string) {
-    const stmt = database.prepare('SELECT data, cachedAt FROM recipes WHERE id = ?')
-    const row = stmt.get(id) as { data: string; cachedAt: number } | undefined
-    return row ? { recipe: JSON.parse(row.data), cachedAt: row.cachedAt } : null
-}  
+  if (!row) return null
+  const parsedData = JSON.parse(row.data) as Recipe
+
+  return {
+    recipe: parsedData,
+    cachedAt: row.cachedAt
+  }
+}
