@@ -4,6 +4,7 @@ import express, { Application, Request, Response } from 'express'
 import cors from 'cors'
 import { saveRecipe, getRecipe } from './database/cache'
 import { ComplexSearchResponse, SpoonacularInstruction, Recipe, Ingredient, FormattedMeasures } from './types/types'
+import { fetchWithTimeout } from './utils/fetchWithTimeout'
 
 dotenv.config()
 
@@ -27,17 +28,17 @@ app.get('/complexSearch', async (req: Request, res: Response) => {
   }
 
   const encodedQuery = encodeURIComponent(query)
-  let url = `https://api.spoonacular.com/recipes/complexSearch?query=${encodedQuery}&number=${number}&apiKey=${spoonacular_api_key}`
-  if (random) {
-    url += '&sort=random'
-  } else {
-    url += `&offset=${offset}`
-  }
+  //No longer will the api key be in the url
+  const baseUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${encodedQuery}&number=${number}`
+  const url = random ? `${baseUrl}&sort=random` : `${baseUrl}&offset=${offset}`
+  const urlWithKey = `${url}&apiKey=${spoonacular_api_key}`
 
   try {
-    const response = await fetch(url)
+    console.log('fetching spoonacular:', url)
+    const response = await fetchWithTimeout(urlWithKey, {}, 5000)
     console.log('done fetching')
     console.log('status:', response.status)
+
     if (!response.ok) {
       const errorText = await response.text()
       throw new Error(`API error: ${response.status} - ${errorText}`)
@@ -45,9 +46,12 @@ app.get('/complexSearch', async (req: Request, res: Response) => {
     const data: ComplexSearchResponse = await response.json()
     res.json(data)
   } catch (error: unknown) {
-      if (error instanceof Error) {
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        return res.status(504).json({ error: 'Request timed out' })
+      }
         console.error(error.message)
-        res.status(500).json({ error: 'Failed to fetch complex search results', details: error.message })
+        res.status(500).json({ error: 'Failed to fetch complex search results'})
       }
     }
 })
@@ -65,13 +69,19 @@ app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request
     return res.json(cachedRecipe.recipe)
   }
 
-//Fetching both endpoints ingredients, and instructions in parallel
+  const instructionsEndPoint = `https://api.spoonacular.com/recipes/${id}/analyzedInstructions`
+  const ingredientsEndPoint = `https://api.spoonacular.com/recipes/${id}/information`
+  const instructionsWithKey = `${instructionsEndPoint}?apiKey=${spoonacular_api_key}`
+  const ingredientsWithKey = `${ingredientsEndPoint}?apiKey=${spoonacular_api_key}`
+
   try {
-    const instructionsEndPoint = `https://api.spoonacular.com/recipes/${id}/analyzedInstructions?apiKey=${spoonacular_api_key}`
-    const ingredientsEndPoint = `https://api.spoonacular.com/recipes/${id}/information?apiKey=${spoonacular_api_key}`
+    console.log('fetching instructions:', instructionsEndPoint)
+    console.log('fetching ingredients:', ingredientsEndPoint)
+
+    //Fetching both endpoints ingredients, and instructions in parallel
     const [instructionData, ingredientData] = await Promise.all([
-      fetch(instructionsEndPoint),
-      fetch(ingredientsEndPoint)
+      fetchWithTimeout(instructionsWithKey, {}, 5000),
+      fetchWithTimeout(ingredientsWithKey, {}, 5000)
     ])
 
     if (!instructionData.ok || !ingredientData.ok) {
@@ -94,7 +104,6 @@ app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request
       return res.status(404).json({ error: 'No ingredients for this recipe' })
     }
 
-    const recipeId = ingredientInformation.id
     const servings = ingredientInformation.servings
 
     //Function will format ingredients to return name original unit and give me back formatted
@@ -136,10 +145,15 @@ app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request
 
     saveRecipe(id, recipeCachedData)
     res.json(recipeCachedData)
-  } catch (error) {
-      console.error('error happening ')
-      res.status(500).json({ error: 'server failed' })
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if(error.name === 'AbortError') {
+        return res.status(504).json({error: 'upstream service timeout'})
+      }
+      console.error('error happening ', error.message)
+      return res.status(500).json({ error: 'unknown server error' })
     }
+  }
 })
 
 app.listen(port, () => {
