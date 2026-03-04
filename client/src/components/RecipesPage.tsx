@@ -70,11 +70,10 @@ export default function RecipesPage() {
           </div>
           {/* Pagination buttons */}
           <div className='flex justify-center mt-4'>
-            {!isRandom && !isLoading && canPaginate && (
-              <LoadMoreRecipesButton onClick={loadMoreRecipes}>Load More Recipes!</LoadMoreRecipesButton>
-            )}
-            {isRandom && isLoading && recipes.length < 60 && (
-              <LoadMoreRecipesButton onClick={loadMoreRecipes}>Load more Random Recipes!</LoadMoreRecipesButton>
+            {!isLoading && canPaginate && (
+              <LoadMoreRecipesButton onClick={loadMoreRecipes} disabled={isLoading}>
+                {isRandom ? 'Load more Random Recipes!' : 'Load more recipes!'}
+              </LoadMoreRecipesButton>
             )}
           </div>
           {/* Toggle category cards */}

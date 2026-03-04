@@ -1,5 +1,3 @@
-//This component is just for the loading more instructions steps just a button
-
 export interface InstructionsButton {
     isInstructionsToggled: boolean,
     instructionSteps: number,

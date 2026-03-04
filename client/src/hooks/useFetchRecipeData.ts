@@ -3,30 +3,35 @@ import { RecipeDetails } from '../utils/types/types'
 import { fetchRecipeData } from '../utils/types/fetchRecipeData'
 
 export default function useFetchRecipeData(recipeId: string | undefined) {
-    const [recipeData, setRecipeData] = useState<RecipeDetails | null>(null)
-    const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | null>(null)
+  const [recipeData, setRecipeData] = useState<RecipeDetails | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-    useEffect(() => {
-        setLoading(true)
-        setError(null)
-        setRecipeData(null)
+  useEffect(() => {
+    setLoading(true)
+    setError(null)
+    setRecipeData(null)
 
-        if (recipeId) {
-            fetchRecipeData(recipeId)
-                .then((data) => {
-                    setRecipeData(data)
-                })
+    if (!recipeId) {
+      setLoading(false)
+      return
+    }
 
-                .catch((err) => {
-                    console.error(err)
-                    setError('something went wrong fetching the data')
-                })
-                .finally(() => setLoading(false))
-        } else {
-            setLoading(false)
-        }
+    const controller = new AbortController()
 
-    }, [recipeId])
-    return { recipeData, loading, error }
+    fetchRecipeData(recipeId, controller.signal)
+      .then((data) => {
+        setRecipeData(data)
+      })
+      .catch((err) => {
+        if (err?.name === 'AbortError') return
+        setError('something went wrong fetching this recipe')
+        console.error(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+      return () => controller.abort()
+  }, [recipeId])
+  return { recipeData, loading, error }
 }

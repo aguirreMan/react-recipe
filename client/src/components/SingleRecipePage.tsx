@@ -11,8 +11,7 @@ import { SpoonacularInstructions } from '../utils/types/types'
 export default function SingleRecipePage() {
   const { recipeId } = useParams<{ recipeId: string }>()
   const { recipeData, loading, error } = useFetchRecipeData(recipeId)
-  //const location = useLocation()
-  //const recipeObject = location.state?.recipe
+
   const [currentUnit, setCurrentUnit] = useState<'us' | 'metric'>('us')
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -28,9 +27,9 @@ export default function SingleRecipePage() {
 
   if (loading) return <Loading message='fetching recipe' />
   if (error) return <div>Error: {error}</div>
-  if (!recipeData) return <div>No recipe found with this ID.</div>
+  if (!recipeData) return <div>No recipe found with this id</div>
 
-  const recipeToRender = recipeData
+  //const recipeToRender = recipeData
 
   function toggleUnitSystem(newUnit: 'us' | 'metric') {
     setCurrentUnit(newUnit)
@@ -54,25 +53,25 @@ export default function SingleRecipePage() {
   function calculateInstructionDifference(totalSteps: number) {
     const defaultNumberOfStepsToRender = 4
     if (totalSteps <= defaultNumberOfStepsToRender) return 0
-   return totalSteps - defaultNumberOfStepsToRender
+    return totalSteps - defaultNumberOfStepsToRender
   }
 
-  const instructionsToDisplay = toggleRestofInstructions(recipeData.instructions, instructionsToggle)
+  const instructionsToDisplay = toggleRestofInstructions(recipeData!.instructions, instructionsToggle)
 
   return (
     <div className='relative max-w-5xl mx-auto px-4 pt-16'>
       <GoBackArrow onClick={handleGoBack} />
 
       <div className='flex justify-between items-center mt-6'>
-        <h1 className='text-center mt-6 text-3xl text-custom-header'>{recipeToRender.title}</h1>
+        <h1 className='text-center mt-6 text-3xl text-custom-header'>{recipeData!.title}</h1>
         <UnitToggle unit={currentUnit} onToggle={toggleUnitSystem} />
       </div>
 
       <div className='mt-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-start'>
         <div className='flex justify-center'>
           <img
-            src={recipeToRender.image}
-            alt={recipeToRender.title}
+            src={recipeData!.image}
+            alt={recipeData!.title}
             className='object-cover rounded-lg max-w-[400px] max-h-[400px]'
           />
         </div>
@@ -116,11 +115,11 @@ export default function SingleRecipePage() {
           </p>
         ))}
 
-        {recipeData.instructions?.length > 4 && (
+        {recipeData!.instructions.length > 4 && (
           <div className='pt-2 flex justify-center'>
             <LoadMoreInstructionsButton
               isInstructionsToggled={instructionsToggle}
-              instructionSteps={calculateInstructionDifference(recipeData?.instructions.length)}
+              instructionSteps={calculateInstructionDifference(recipeData!.instructions.length)}
               onInstructionToggle={toggleInstructions}
             />
           </div>
