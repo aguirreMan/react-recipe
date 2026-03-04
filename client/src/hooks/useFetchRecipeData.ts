@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { RecipeDetails } from '../api/dummyData'
-import { fetchRecipeData } from '../api/fetchRecipeData'
+import { RecipeDetails } from '../utils/types/types'
+import { fetchRecipeData } from '../utils/types/fetchRecipeData'
 
 export default function useFetchRecipeData(recipeId: string | undefined) {
     const [recipeData, setRecipeData] = useState<RecipeDetails | null>(null)

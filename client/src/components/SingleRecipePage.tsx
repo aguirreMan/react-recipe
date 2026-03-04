@@ -6,7 +6,7 @@ import Loading from './Loading'
 import UnitToggle from './UnitToggle'
 import GoBackArrow from './GoBackArrow'
 import LoadMoreInstructionsButton from './LoadMoreInstructionsButton'
-import { SpoonacularInstructions } from '../api/dummyData'
+import { SpoonacularInstructions } from '../utils/types/types'
 
 export default function SingleRecipePage() {
   const { recipeId } = useParams<{ recipeId: string }>()

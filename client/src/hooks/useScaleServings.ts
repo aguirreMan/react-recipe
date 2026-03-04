@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
-import { ExtendedIngredients } from '../api/dummyData'
-import formatAmounts from '../api/formatAmounts'
+import { ExtendedIngredients } from '../utils/types/types'
+import formatAmounts from '../utils/types/formatAmounts'
 
 export default function useScaleServings(
   initialServings: number,
