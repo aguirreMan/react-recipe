@@ -3,9 +3,9 @@ import { useSearchParams, useNavigate } from 'react-router'
 import Categories from './Categories'
 import { useFetchRecipes } from '../hooks/useFetchRecipes'
 import SpoonacularRecipes from './SpoonacularRecipes'
-import LoadMoreRecipesButton from './LoadMoreRecipesButton'
 import Loading from './Loading'
 import { SpoonacularResultsComplexSearch } from '../utils/types/types'
+import Button from './Button'
 
 export default function RecipesPage() {
   const navigate = useNavigate()
@@ -71,21 +71,21 @@ export default function RecipesPage() {
           {/* Pagination buttons */}
           <div className='flex justify-center mt-4'>
             {!isLoading && canPaginate && (
-              <LoadMoreRecipesButton onClick={loadMoreRecipes} disabled={isLoading}>
+              <Button onClick={loadMoreRecipes} disabled={isLoading}>
                 {isRandom ? 'Load more Random Recipes!' : 'Load more recipes!'}
-              </LoadMoreRecipesButton>
+              </Button>
             )}
           </div>
           {/* Toggle category cards */}
           {recipes.length > 0 && (
             <div className='flex justify-center mt-4'>
-              <button
-                className='flex items-center gap-2 px-6 rounded-full font-semibold shadow-md bg-custom-category-card-hover mt-4 mb-4'
+              <Button
+                className='rounded-full font-semibold shadow-md bg-custom-category-card-hover mt-4 mb-4'
                 onClick={toggleCategories}
               >
                 {showCategories ? 'hide categories' : 'show categories'}
                 <span className={`transform transition-transform ${showCategories ? 'rotate-180' : ''}`}>▼</span>
-              </button>
+              </Button>
             </div>
           )}
         </div>

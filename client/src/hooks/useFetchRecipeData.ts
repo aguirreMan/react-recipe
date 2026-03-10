@@ -20,18 +20,19 @@ export default function useFetchRecipeData(recipeId: string | undefined) {
     const controller = new AbortController()
 
     fetchRecipeData(recipeId, controller.signal)
-      .then((data) => {
-        setRecipeData(data)
-      })
+      .then((data) => setRecipeData(data))
       .catch((err) => {
         if (err?.name === 'AbortError') return
         setError('something went wrong fetching this recipe')
         console.error(err)
       })
       .finally(() => {
+        if (!controller.signal.aborted) return
         setLoading(false)
       })
-      return () => controller.abort()
+
+    return () => controller.abort()
+
   }, [recipeId])
   return { recipeData, loading, error }
 }

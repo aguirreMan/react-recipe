@@ -25,7 +25,9 @@ export default function SearchBar() {
             onChange={handleInput}
           />
           <button type='submit' className='border-0 bg-custom-button text-amber-100
-          cursor-pointer outline-0 w-20 hover:bg-custom-button-hover transition-colors'>Search</button>
+              cursor-pointer outline-0 w-20 hover:bg-custom-button-hover transition-colors'>
+            Search
+          </button>
         </div>
       </section>
     </form>

@@ -4,8 +4,7 @@ import useFetchRecipeData from '../hooks/useFetchRecipeData'
 import useScaleServings from '../hooks/useScaleServings'
 import Loading from './Loading'
 import UnitToggle from './UnitToggle'
-import GoBackArrow from './GoBackArrow'
-import LoadMoreInstructionsButton from './LoadMoreInstructionsButton'
+import Button from './Button'
 import { SpoonacularInstructions } from '../utils/types/types'
 
 export default function SingleRecipePage() {
@@ -20,7 +19,7 @@ export default function SingleRecipePage() {
   const pageNumber = searchParams.get('page') || '1'
   const ifCategory = searchParams.get('isCategory') || ''
 
-  const [instructionsToggle, setInstructionToggle] = useState<boolean>(false)
+  const [instructionsToggle, setInstructionToggle] = useState(false)
 
   const { servingsSize, scaleIngredients, incrementServings, decrementServings, resetServings } =
     useScaleServings(recipeData?.servings || 0, recipeData?.extendedIngredients || [])
@@ -28,8 +27,6 @@ export default function SingleRecipePage() {
   if (loading) return <Loading message='fetching recipe' />
   if (error) return <div>Error: {error}</div>
   if (!recipeData) return <div>No recipe found with this id</div>
-
-  //const recipeToRender = recipeData
 
   function toggleUnitSystem(newUnit: 'us' | 'metric') {
     setCurrentUnit(newUnit)
@@ -56,22 +53,24 @@ export default function SingleRecipePage() {
     return totalSteps - defaultNumberOfStepsToRender
   }
 
-  const instructionsToDisplay = toggleRestofInstructions(recipeData!.instructions, instructionsToggle)
+  const instructionsToDisplay = toggleRestofInstructions(recipeData.instructions, instructionsToggle)
 
   return (
     <div className='relative max-w-5xl mx-auto px-4 pt-16'>
-      <GoBackArrow onClick={handleGoBack} />
+      <Button onClick={handleGoBack}>
+        Go Back
+      </Button>
 
       <div className='flex justify-between items-center mt-6'>
-        <h1 className='text-center mt-6 text-3xl text-custom-header'>{recipeData!.title}</h1>
+        <h1 className='text-center mt-6 text-3xl text-custom-header'>{recipeData.title}</h1>
         <UnitToggle unit={currentUnit} onToggle={toggleUnitSystem} />
       </div>
 
       <div className='mt-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-start'>
         <div className='flex justify-center'>
           <img
-            src={recipeData!.image}
-            alt={recipeData!.title}
+            src={recipeData.image}
+            alt={recipeData.title}
             className='object-cover rounded-lg max-w-[400px] max-h-[400px]'
           />
         </div>
@@ -79,23 +78,23 @@ export default function SingleRecipePage() {
         <div className='flex flex-col gap-6 items-center'>
           <span className='text-lg font-semibold'>{servingsSize} servings</span>
           <div className='flex gap-2'>
-            <button onClick={incrementServings} className='bg-custom-button text-white rounded px-4 py-2 cursor-pointer'>
+            <Button onClick={incrementServings} className='w-10'>
               +
-            </button>
-            <button onClick={decrementServings} className='bg-custom-button text-white rounded px-4 py-2 cursor-pointer'>
+            </Button>
+            <Button onClick={decrementServings} className='w-10'>
               -
-            </button>
-            <button onClick={resetServings} className='bg-custom-button-reset text-white rounded px-4 py-2 cursor-pointer'>
+            </Button>
+            <Button onClick={resetServings} className='bg-custom-button-reset text-white w-18'>
               Reset
-            </button>
+            </Button>
           </div>
         </div>
         {/*Ingredients section */}
         <div>
           <h2 className='text-xl text-custom-header font-bold mb-2'>Ingredients</h2>
           <ul className='flex flex-col gap-1'>
-            {scaleIngredients.map((ingredient, index) => (
-              <li key={index}>
+            {scaleIngredients.map((ingredient) => (
+              <li key={ingredient.name}>
                 {currentUnit === 'us'
                   ? ingredient.formattedMeasures?.us || ingredient.original
                   : ingredient.formattedMeasures?.metric || ingredient.original}{' '}
@@ -115,13 +114,11 @@ export default function SingleRecipePage() {
           </p>
         ))}
 
-        {recipeData!.instructions.length > 4 && (
+        {recipeData.instructions.length > 4 && (
           <div className='pt-2 flex justify-center'>
-            <LoadMoreInstructionsButton
-              isInstructionsToggled={instructionsToggle}
-              instructionSteps={calculateInstructionDifference(recipeData!.instructions.length)}
-              onInstructionToggle={toggleInstructions}
-            />
+            <Button onClick={toggleInstructions}>
+              {instructionsToggle ? 'Hide Instructions' : `Show ${calculateInstructionDifference(recipeData!.instructions.length)} more steps`}
+            </Button>
           </div>
         )}
       </div>
