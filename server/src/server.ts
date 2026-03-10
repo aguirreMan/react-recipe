@@ -80,8 +80,8 @@ app.get('/spoonacularInstructions/recipes/:id/instructions', async (req: Request
 
     //Fetching both endpoints ingredients, and instructions in parallel
     const [instructionData, ingredientData] = await Promise.all([
-      fetchWithTimeout(instructionsWithKey, {}, 5000),
-      fetchWithTimeout(ingredientsWithKey, {}, 5000)
+      fetchWithTimeout(instructionsWithKey, {}, 15000),
+      fetchWithTimeout(ingredientsWithKey, {}, 15000)
     ])
 
     if (!instructionData.ok || !ingredientData.ok) {
