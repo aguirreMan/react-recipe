@@ -16,63 +16,62 @@ export default function useScaleServings(
   },[initialServings])
 
     const scaleIngredients = useMemo(() => {
-        if (!initialIngredients?.length || initialServings <= 0) {
-            return initialIngredients || []
+      if (!initialIngredients?.length || initialServings <= 0) {
+        return initialIngredients || []
+      }
+
+      const scaleFormula = servingsSize / initialServings
+
+      const result = initialIngredients.map(ingredient => {
+        if (!ingredient.measures?.us?.amount || !ingredient.measures?.metric?.amount) {
+          return ingredient
         }
 
-        const scaleFormula = servingsSize / initialServings
+        const scaledAmountUS = ingredient.measures.us.amount * scaleFormula
+        const scaledAmountMetric = ingredient.measures.metric.amount * scaleFormula
 
-        const result = initialIngredients.map(ingredient => {
-            if (!ingredient.measures?.us?.amount || !ingredient.measures?.metric?.amount) {
-                return ingredient
+        return {
+          ...ingredient,
+          measures: {
+            us: {
+              ...ingredient.measures.us,
+              amount: scaledAmountUS
+            },
+            metric: {
+              ...ingredient.measures.metric,
+              amount: scaledAmountMetric
             }
-
-            const scaledAmountUS = ingredient.measures.us.amount * scaleFormula
-            const scaledAmountMetric = ingredient.measures.metric.amount * scaleFormula
-
-            return {
-                ...ingredient,
-                measures: {
-                    us: {
-                        ...ingredient.measures.us,
-                        amount: scaledAmountUS
-                    },
-                    metric: {
-                        ...ingredient.measures.metric,
-                        amount: scaledAmountMetric
-                    }
-                },
-                formattedMeasures: {
-                    us: `${formatAmounts(scaledAmountUS)}
-                    ${ingredient.measures.us.unitShort ||
-                        ingredient.measures.us.unitLong}`,
-                    metric: `${formatAmounts(scaledAmountMetric)}
-                    ${ingredient.measures.metric.unitShort ||
-                        ingredient.measures.metric.unitLong}`
-                }
-            }
-        })
-
-        return result
+          },
+          formattedMeasures: {
+            us: `${formatAmounts(scaledAmountUS)}
+            ${ingredient.measures.us.unitShort ||
+            ingredient.measures.us.unitLong}`,
+            metric: `${formatAmounts(scaledAmountMetric)}
+            ${ingredient.measures.metric.unitShort ||
+            ingredient.measures.metric.unitLong}`
+          }
+        }
+      })
+      return result
 
     }, [servingsSize, initialServings, initialIngredients])
 
     function incrementServings() {
-        setServingsSize(prev => prev + 1)
+      setServingsSize(prev => prev + 1)
     }
 
     function decrementServings() {
-        setServingsSize(prev => Math.max(prev - 1, initialServings))
+      setServingsSize(prev => Math.max(prev - 1, initialServings))
     }
 
     function resetServings() {
-        setServingsSize(initialServings)
+      setServingsSize(initialServings)
     }
     return {
-        servingsSize,
-        scaleIngredients,
-        incrementServings,
-        decrementServings,
-        resetServings
+      servingsSize,
+      scaleIngredients,
+      incrementServings,
+      decrementServings,
+      resetServings
     }
 }

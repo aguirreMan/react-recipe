@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { fetchRecipes } from '../utils/types/fetchRecipes'
-import { SpoonacularResultsComplexSearch, useFetchRecipesParams } from '../utils/types/types'
+import { SpoonacularResultsComplexSearch, FetchRecipesParams } from '../utils/types/types'
 
-export function useFetchRecipes({ query, page, random }: useFetchRecipesParams) {
+export function useFetchRecipes({ query, page, random }: FetchRecipesParams) {
   const [recipes, setRecipes] = useState<SpoonacularResultsComplexSearch[]>([])
   const [totalResults, setTotalResults] = useState(0)
    const [isLoading, setIsLoading] = useState(false)

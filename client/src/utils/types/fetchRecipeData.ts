@@ -11,13 +11,13 @@ export async function fetchRecipeData(recipeId: string, signal?: AbortSignal): P
   if (isNaN(numberId)) {
     throw new Error('Recipe id must be a number')
   }
-  const apiEndpoint = `${API_URL}/spoonacularInstructions/recipes/${recipeId}/instructions`
+  const apiEndpoint = `${API_URL}/spoonacularInstructions/recipes/${numberId}/instructions`
   const apiResponse = await fetch(apiEndpoint, {signal})
   if (!apiResponse.ok) {
     const errorData:{ error: string } = await apiResponse.json()
     throw new Error(`server error: ${errorData.error}`)
   }
   const recipeData: RecipeDetails = await apiResponse.json()
-  console.log(recipeData)
+  //console.log(recipeData)
   return recipeData
 }

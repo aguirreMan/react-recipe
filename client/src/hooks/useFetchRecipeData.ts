@@ -27,7 +27,7 @@ export default function useFetchRecipeData(recipeId: string | undefined) {
         console.error(err)
       })
       .finally(() => {
-        if (!controller.signal.aborted) return
+        if (controller.signal.aborted) return
         setLoading(false)
       })
 

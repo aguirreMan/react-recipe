@@ -13,7 +13,7 @@ export interface ComplexSearchResponse {
   totalResults: number
 }
 
-export interface useFetchRecipesParams {
+export interface FetchRecipesParams {
   query: string
   page: number
   random: boolean
